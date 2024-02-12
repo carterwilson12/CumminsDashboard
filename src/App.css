@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+.WIP-selector{
+  flex-direction:column;
+  flex-grow: 1;
+  columns: 1;
+  justify-content: left;
+  width: 20vw
+  
+}

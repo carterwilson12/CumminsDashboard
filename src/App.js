@@ -1,23 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 function App() {
+  const alertClicked = () => {
+    alert('You clicked the third ListGroupItem');
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <div className="WIP-selector">  
+          <ListGroup defaultActiveKey="#link1">
+            <ListGroup.Item action href="#link1">
+              Link 1
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2" disabled>
+              Link 2
+            </ListGroup.Item>
+            <ListGroup.Item action onClick={alertClicked}>
+              This one is a button
+            </ListGroup.Item>
+          </ListGroup>
+        </div>
     </div>
   );
 }
