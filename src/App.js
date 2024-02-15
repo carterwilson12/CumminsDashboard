@@ -19,8 +19,7 @@ function App() {
   const handleWIPselect = (event, newWIP) => {
     setWIP(newWIP);
   };
-  return (
-    
+  return (  // whaddup
     <div className="App">
         <div className="SearchBar">  
           <AutocompleteHint></AutocompleteHint>
