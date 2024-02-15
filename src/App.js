@@ -1,5 +1,6 @@
 import './App.css';
 import AutocompleteHint from './components/autocomplete';
+import TSNtable from './components/TSNtable';
 import { Button, ButtonGroup, ToggleButtonGroup, ToggleButton} from '@mui/material';
 import React from 'react';
 const mystyle = {
@@ -19,10 +20,11 @@ function App() {
   const handleWIPselect = (event, newWIP) => {
     setWIP(newWIP);
   };
-  return (  // whaddup
+  return (
     <div className="App">
         <div className="SearchBar">  
           <AutocompleteHint></AutocompleteHint>
+          <TSNtable><TSNtable/>
         </div>
         
       <ToggleButtonGroup value={wip_id}
