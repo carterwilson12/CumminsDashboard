@@ -1,6 +1,7 @@
 import './App.css';
 import WIPselector from './components/WIP-selector';
 import AutocompleteHint from './components/autocomplete';
+import TSNtable from './components/TSNtable';
 import { Button, ButtonGroup, ToggleButtonGroup, ToggleButton} from '@mui/material';
 import React from 'react';
 const wip_ids = ["LS12231232",
@@ -11,12 +12,15 @@ const wip_ids = ["LS12231232",
 
   
 function App() {
-  
-  
-  return (  // whaddup
+  const [wip_id, setWIP] = React.useState<String | null>('');
+  const handleWIPselect = (event, newWIP) => {
+    setWIP(newWIP);
+  };
+  return (
     <div className="App">
         <div className="SearchBar">  
-          <AutocompleteHint ></AutocompleteHint>
+          <AutocompleteHint></AutocompleteHint>
+          <TSNtable><TSNtable/>
         </div>
         
         <WIPselector wip_ids={wip_ids}></WIPselector>
