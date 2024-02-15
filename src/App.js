@@ -20,7 +20,7 @@ function App() {
     <div className="App">
         <div className="SearchBar">  
           <AutocompleteHint></AutocompleteHint>
-          <TSNtable><TSNtable/>
+          <TSNtable></TSNtable>
         </div>
         
         <WIPselector wip_ids={wip_ids}></WIPselector>
