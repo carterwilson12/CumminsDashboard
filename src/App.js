@@ -1,43 +1,26 @@
 import './App.css';
+import WIPselector from './components/WIP-selector';
 import AutocompleteHint from './components/autocomplete';
-import TSNtable from './components/TSNtable';
+//import TSNtable from './components/TSNtable';
 import { Button, ButtonGroup, ToggleButtonGroup, ToggleButton} from '@mui/material';
 import React from 'react';
-const mystyle = {
-  color: "white",
-  backgroundColor: "DodgerBlue",
-  
-};
 const wip_ids = ["LS12231232",
   "MS1732231362",
   "MS1732213213",
-  "MS1732132123",
-  "MS1732332323",]
+  "MS1732132124",
+  "MS1732332325",]
 
   
 function App() {
-  const [wip_id, setWIP] = React.useState<String | null>('');
-  const handleWIPselect = (event, newWIP) => {
-    setWIP(newWIP);
-  };
+
   return (
     <div className="App">
         <div className="SearchBar">  
           <AutocompleteHint></AutocompleteHint>
-          <TSNtable><TSNtable/>
+          {/* <TSNtable></TSNtable> */}
         </div>
         
-      <ToggleButtonGroup value={wip_id}
-      exclusive
-      onChange={handleWIPselect}
-      className="WIP-list" orientation="vertical" aria-label="Vertical button group" variant="contained">
-        {Object.entries(wip_ids).map(wip_id=>{
-          console.log(wip_id)
-          return(
-            <ToggleButton value={wip_id}className="WIP-selector-button">{wip_id}</ToggleButton>
-          )
-        })}
-      </ToggleButtonGroup>
+        <WIPselector wip_ids={wip_ids}></WIPselector>
       
     </div>
     
