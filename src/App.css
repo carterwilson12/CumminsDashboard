@@ -2,20 +2,21 @@
 .App {
   padding: 1%;
   text-align: center;
+  
+    
   .WIP-list{
+    width: fill;
+    
     .WIP-selector-button{
-      color: white;
-      background-color: #2c387e;
-      border-color: black;
-      border-radius: 5%;
-    }
-    .WIP-selector-button-active{
       color: #2c387e;
       background-color: white;
       border-color: black;
-      border-radius: 5%;
+      width: fill;
+      
     }
   }
+  
+  
 }
 
 .App-logo {
