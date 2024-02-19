@@ -25,7 +25,7 @@ function App() {
         </div>
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}><WIPselector wip_ids={wip_ids}></WIPselector></Grid>
-          <Grid item xs={8}><Box
+          <Grid item xs={8}><TSNtable
         sx={{
           width: 1000,
           height: 500,
