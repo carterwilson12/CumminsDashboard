@@ -2,8 +2,9 @@ import './App.css';
 import WIPselector from './components/WIP-selector';
 
 import AutocompleteHint from './components/autocomplete';
-//import TSNtable from './components/TSNtable';
+import TSNtable from './components/TSNtable';
 import { Button, ButtonGroup, ToggleButtonGroup, ToggleButton, Grid, Box} from '@mui/material';
+
 
 import React from 'react';
 const wip_ids = ["LS12231232",
@@ -20,7 +21,7 @@ function App() {
 
         <div className="SearchBar">  
           <AutocompleteHint></AutocompleteHint>
-          {/* <TSNtable></TSNtable> */}
+          
         </div>
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}><WIPselector wip_ids={wip_ids}></WIPselector></Grid>

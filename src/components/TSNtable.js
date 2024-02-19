@@ -9,11 +9,11 @@ import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
 
 const sample = [
-  ['73213', 0o4, 0, 0, 0],
-  ['73214', 0o1, 0, 0, 0],
-  ['73215', 0o1, 0, 0, 0],
-  ['73216', 0o1, 0, 0, 0],
-  ['73217', 0o1, 0, 0, 0],
+  ['73213', 0.4, 0, 0, 0],
+  ['73214', 0.1, 0, 0, 0],
+  ['73215', 0.1, 0, 0, 0],
+  ['73216', 0.1, 0, 0, 0],
+  ['73217', 0.1, 0, 0, 0],
 ];
 
 function createData(id, tsn, status, placeholder1, placeholder2, placeholder3) {
@@ -52,10 +52,12 @@ const columns = [
   },
 ];
 
-const rows = Array.from({ length: 200 }, (_, index) => {
-    const selection = sample[Math.floor(Math.random() * sample.length)];
-    return createData(index, ...selection);
-  });
+var i = 0;
+const rows = Array.from({ length: sample.length }, (_, index) => {
+    var selection = sample[i];
+    i++;
+  return createData(index, ...selection);
+});
 
 const VirtuosoTableComponents = {
   Scroller: React.forwardRef((props, ref) => (
