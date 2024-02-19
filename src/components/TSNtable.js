@@ -11,13 +11,13 @@ import { TableVirtuoso } from 'react-virtuoso';
 const sample = [
   ['73213', 0o4, 0, 0, 0],
   ['73214', 0o1, 0, 0, 0],
-  ['Eclair', 262, 16.0, 24, 6.0],
-  ['Cupcake', 305, 3.7, 67, 4.3],
-  ['Gingerbread', 356, 16.0, 49, 3.9],
+  ['73215', 0o1, 0, 0, 0],
+  ['73216', 0o1, 0, 0, 0],
+  ['73217', 0o1, 0, 0, 0],
 ];
 
-function createData(id, dessert, calories, fat, carbs, protein) {
-  return { id, dessert, calories, fat, carbs, protein };
+function createData(id, tsn, status, placeholder1, placeholder2, placeholder3) {
+    return { id, tsn, status, placeholder1, placeholder2, placeholder3 };
 }
 
 const columns = [
@@ -53,9 +53,9 @@ const columns = [
 ];
 
 const rows = Array.from({ length: 200 }, (_, index) => {
-  const selection = sample.length;
-  return createData(index, ...selection);
-});
+    const selection = sample[Math.floor(Math.random() * sample.length)];
+    return createData(index, ...selection);
+  });
 
 const VirtuosoTableComponents = {
   Scroller: React.forwardRef((props, ref) => (
