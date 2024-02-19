@@ -1,6 +1,6 @@
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import React from 'react';
-
+import {indigo} from '@mui/material/colors'
 
 
 
@@ -22,7 +22,7 @@ export default function WIPselector({ wip_ids = [] }) { // Destructure wip_ids a
         className="WIP-list" 
         orientation="vertical" 
         aria-label="Vertical button group" 
-        variant="contained"
+        variant="scrollable"
         >
         {Array.isArray(wip_ids) && wip_ids.map((wip_id, index) => ( // Check if wip_ids is an array
             <ToggleButton style={{
