@@ -1,6 +1,6 @@
 import './App.css';
 import WIPselector from './components/WIP-selector';
-import {VerticalTabs} from './components/WIP-selector-as-tab'
+
 import AutocompleteHint from './components/autocomplete';
 //import TSNtable from './components/TSNtable';
 import { Button, ButtonGroup, ToggleButtonGroup, ToggleButton} from '@mui/material';
@@ -20,8 +20,8 @@ function App() {
           <AutocompleteHint></AutocompleteHint>
           {/* <TSNtable></TSNtable> */}
         </div>
-        <VerticalTabs></VerticalTabs>
-        {/* <WIPselector wip_ids={wip_ids}></WIPselector> */}
+        
+        <WIPselector wip_ids={wip_ids}></WIPselector>
       
     </div>
     
