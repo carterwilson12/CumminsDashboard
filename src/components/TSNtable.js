@@ -8,11 +8,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
 
-function createData(id, tsn, status, voc, consumedBom, consumedChra) {
-    return { id, tsn, status, voc, consumedBom, consumedChra };
+function createData(id, tsn, status, voc ) {
+    return { id, tsn, status, voc };
 }
-
-
 
 const columns = [
   {
@@ -30,18 +28,6 @@ const columns = [
     width: 120,
     label: 'VOC',
     dataKey: 'voc',
-    numeric: true,
-  },
-  {
-    width: 120,
-    label: 'Consumed BOM',
-    dataKey: 'consumedBom',
-    numeric: true,
-  },
-  {
-    width: 120,
-    label: 'Consumed CHRA',
-    dataKey: 'consumedChra',
     numeric: true,
   },
 ];
