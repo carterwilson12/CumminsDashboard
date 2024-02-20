@@ -17,7 +17,7 @@ export default function WIPselector({ wip_ids = [] }) { // Destructure wip_ids a
   return (
         
         <div>
-          <h2>WIP Jobs</h2>
+          
           <ToggleButtonGroup 
           exclusive
           onChange={handleChange}
