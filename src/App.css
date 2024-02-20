@@ -2,10 +2,25 @@
 .App {
   padding: 1%;
   text-align: center;
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
   
-    
+  *::-webkit-scrollbar-track {
+    background: #33bfff;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 20px;
+    border: 2px solid black;
+  }
+  
   .WIP-list{
     width: fill;
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
     
     .WIP-selector-button{
       color: #2c387e;
@@ -15,6 +30,7 @@
       
     }
   }
+  
   
   
 }
