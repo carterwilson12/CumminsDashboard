@@ -3,6 +3,7 @@ import WIPselector from './components/WIP-selector';
 
 import AutocompleteHint from './components/autocomplete';
 import TSNtable from './components/TSNtable';
+import BOMtable from './components/BOMtable'
 import { Button, ButtonGroup, ToggleButtonGroup, ToggleButton, Grid, Box} from '@mui/material';
 
 
@@ -46,7 +47,7 @@ function App() {
           <AutocompleteHint></AutocompleteHint>
           
         </div>
-        <Grid container direction="row" justifyContent="flex-start"spacing={2}>
+        <Grid container direction="row" justifyContent="flex-start" spacing={2}>
           <Grid item xs={2}><WIPselector wip_ids={wip_ids}></WIPselector></Grid>
           <Grid item xs={8}><TSNtable sample={sample}
         sx={{
@@ -57,6 +58,7 @@ function App() {
           
         }}
       /></Grid>
+          <Grid item xs={8}><BOMtable></BOMtable></Grid>
         </Grid>
         
       
