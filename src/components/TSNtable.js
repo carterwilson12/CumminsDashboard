@@ -8,11 +8,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
 
-function createData(id, tsn, status, placeholder1, placeholder2, placeholder3) {
-    return { id, tsn, status, placeholder1, placeholder2, placeholder3 };
+function createData(id, tsn, status, voc ) {
+    return { id, tsn, status, voc };
 }
-
-
 
 const columns = [
   {
@@ -22,26 +20,14 @@ const columns = [
   },
   {
     width: 120,
-    label: 'Status\u00A0(g)',
+    label: 'Status',
     dataKey: 'status',
     numeric: true,
   },
   {
     width: 120,
-    label: 'Placeholder1\u00A0(g)',
-    dataKey: 'placeholder1',
-    numeric: true,
-  },
-  {
-    width: 120,
-    label: 'Placeholder2\u00A0(g)',
-    dataKey: 'placeholder2',
-    numeric: true,
-  },
-  {
-    width: 120,
-    label: 'Placeholder3\u00A0(g)',
-    dataKey: 'placeholder3',
+    label: 'VOC',
+    dataKey: 'voc',
     numeric: true,
   },
 ];
