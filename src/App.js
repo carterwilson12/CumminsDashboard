@@ -105,7 +105,7 @@ function App() {
               </ToggleButton>
           ))}
           </ToggleButtonGroup></Grid>
-          <Grid item xs={8}><TSNtable sample={sample}
+          <Grid item xs={10}><TSNtable sample={sample}
         sx={{
           width: 1000,
           height: 500,
