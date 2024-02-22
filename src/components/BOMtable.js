@@ -6,19 +6,20 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(name1, name2, name3, name4, name5) {
-  return { name1, name2, name3, name4, name5 };
+function createData(id, name1, name2, name3, name4, name5) {
+  return {id, name1, name2, name3, name4, name5 };
 }
 
-const rows = [
-  createData('part 1', 'part 2', 'part 3', 'part 4', 'part 5'),
-  createData('part'),
-  createData('part'),
-  createData('part'),
-  createData('part'),
-];
+export default function DenseTable({sample2 = []}) {
 
-export default function DenseTable() {
+  var i = 0;
+    const rows = Array.from({ length: sample2.length }, (_, index) => {
+        var selection = sample2[i];
+        i++;
+  return createData(index, ...selection);
+
+});
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
