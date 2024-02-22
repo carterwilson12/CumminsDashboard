@@ -14,7 +14,7 @@ function createData(id, tsn, status, voc ) {
 
 const columns = [
   {
-    width: 200,
+    width: 50,
     label: 'TSN',
     dataKey: 'tsn',
   },
@@ -22,13 +22,11 @@ const columns = [
     width: 120,
     label: 'Status',
     dataKey: 'status',
-    numeric: true,
   },
   {
     width: 120,
     label: 'VOC',
     dataKey: 'voc',
-    numeric: true,
   },
 ];
 
