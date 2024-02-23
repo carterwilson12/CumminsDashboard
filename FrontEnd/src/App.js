@@ -11,7 +11,7 @@ function App() {
   const [data, setData] = useState([])
 
   useEffect(()=>{
-    fetch('http://localhost:8081/users')
+    fetch('http://localhost:8081/devices')
     .then(res => res.json())
     .then(data => setData(data))
     .catch(err => console.log(err))
@@ -25,7 +25,7 @@ function App() {
           <div className="wipselector">
             <AutocompleteHint></AutocompleteHint>
             {data.map((d,i) =>(
-              <WIPselector wip_id={d.azure_id}></WIPselector>
+              <WIPselector wip_id={d.WIP_JOB_NUMBER}></WIPselector>
             ))}
             
           </div>           
