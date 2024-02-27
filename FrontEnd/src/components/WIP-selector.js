@@ -9,12 +9,10 @@ export default function WIPselector({ wip_id }) { // Destructure wip_ids and pro
 
   // Ensure wip_ids is an array before using map
   return (
-    
-        <ToggleButtonGroup 
-        >
-        <ToggleButton value={wip_id} className="WIP-selector-button">
-        {wip_id}
-        </ToggleButton>
+        <ToggleButtonGroup>
+          <ToggleButton value={wip_id} className="WIP-selector-button">
+            {wip_id}
+          </ToggleButton>
         </ToggleButtonGroup>
   );
 }
