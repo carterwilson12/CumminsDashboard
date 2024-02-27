@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
 
+<<<<<<< HEAD:FrontEnd/src/components/TSNtable.js
 const sample = [
   ['73213', 0.4, 0, 0, 0],
   ['73214', 0.1, 0, 0, 0],
@@ -18,95 +19,95 @@ const sample = [
 
 function createData(id, tsn, status, placeholder1, placeholder2, placeholder3) {
     return { id, tsn, status, placeholder1, placeholder2, placeholder3 };
+=======
+function createData(id, tsn, status, voc ) {
+    return { id, tsn, status, voc };
+>>>>>>> master:src/components/TSNtable.js
 }
 
 const columns = [
   {
-    width: 200,
+    width: 50,
     label: 'TSN',
     dataKey: 'tsn',
   },
   {
     width: 120,
-    label: 'Status\u00A0(g)',
+    label: 'Status',
     dataKey: 'status',
-    numeric: true,
   },
   {
     width: 120,
-    label: 'Placeholder1\u00A0(g)',
-    dataKey: 'placeholder1',
-    numeric: true,
-  },
-  {
-    width: 120,
-    label: 'Placeholder2\u00A0(g)',
-    dataKey: 'placeholder2',
-    numeric: true,
-  },
-  {
-    width: 120,
-    label: 'Placeholder3\u00A0(g)',
-    dataKey: 'placeholder3',
-    numeric: true,
+    label: 'VOC',
+    dataKey: 'voc',
   },
 ];
 
+<<<<<<< HEAD:FrontEnd/src/components/TSNtable.js
 var i = 0;
 const rows = Array.from({ length: sample.length }, (_, index) => {
     var selection = sample[i];
     i++;
   return createData(index, ...selection);
+=======
+export default function ReactVirtualizedTable({sample = []}) {
+
+    var i = 0;
+    const rows = Array.from({ length: sample.length }, (_, index) => {
+        var selection = sample[i];
+        i++;
+  return createData(index, ...selection);
+
+>>>>>>> master:src/components/TSNtable.js
 });
 
 const VirtuosoTableComponents = {
-  Scroller: React.forwardRef((props, ref) => (
-    <TableContainer component={Paper} {...props} ref={ref} />
-  )),
-  Table: (props) => (
-    <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />
-  ),
-  TableHead,
-  TableRow: ({ item: _item, ...props }) => <TableRow {...props} />,
-  TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
-};
+    Scroller: React.forwardRef((props, ref) => (
+      <TableContainer component={Paper} {...props} ref={ref} />
+    )),
+    Table: (props) => (
+      <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />
+    ),
+    TableHead,
+    TableRow: ({ item: _item, ...props }) => <TableRow {...props} />,
+    TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
+  };
 
-function fixedHeaderContent() {
-  return (
-    <TableRow>
-      {columns.map((column) => (
-        <TableCell
-          key={column.dataKey}
-          variant="head"
-          align={column.numeric || false ? 'right' : 'left'}
-          style={{ width: column.width }}
-          sx={{
-            backgroundColor: 'background.paper',
-          }}
-        >
-          {column.label}
-        </TableCell>
-      ))}
-    </TableRow>
-  );
-}
+  function fixedHeaderContent() {
+    return (
+      <TableRow>
+        {columns.map((column) => (
+          <TableCell
+            key={column.dataKey}
+            variant="head"
+            align={column.numeric || false ? 'right' : 'left'}
+            style={{ width: column.width }}
+            sx={{
+              backgroundColor: 'background.paper',
+            }}
+          >
+            {column.label}
+          </TableCell>
+        ))}
+      </TableRow>
+    );
+  }
+  
+  function rowContent(_index, row) {
+    return (
+      <React.Fragment>
+        {columns.map((column) => (
+          <TableCell
+            key={column.dataKey}
+            align={column.numeric || false ? 'right' : 'left'}
+          >
+            {row[column.dataKey]}
+          </TableCell>
+        ))}
+      </React.Fragment>
+    );
+  }
 
-function rowContent(_index, row) {
-  return (
-    <React.Fragment>
-      {columns.map((column) => (
-        <TableCell
-          key={column.dataKey}
-          align={column.numeric || false ? 'right' : 'left'}
-        >
-          {row[column.dataKey]}
-        </TableCell>
-      ))}
-    </React.Fragment>
-  );
-}
-
-export default function ReactVirtualizedTable() {
   return (
     <Paper style={{ height: 400, width: '100%' }}>
       <TableVirtuoso
