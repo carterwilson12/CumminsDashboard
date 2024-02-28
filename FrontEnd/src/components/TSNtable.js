@@ -8,21 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
 
-<<<<<<< HEAD:FrontEnd/src/components/TSNtable.js
-const sample = [
-  ['73213', 0.4, 0, 0, 0],
-  ['73214', 0.1, 0, 0, 0],
-  ['73215', 0.1, 0, 0, 0],
-  ['73216', 0.1, 0, 0, 0],
-  ['73217', 0.1, 0, 0, 0],
-];
-
-function createData(id, tsn, status, placeholder1, placeholder2, placeholder3) {
-    return { id, tsn, status, placeholder1, placeholder2, placeholder3 };
-=======
 function createData(id, tsn, status, voc ) {
     return { id, tsn, status, voc };
->>>>>>> master:src/components/TSNtable.js
 }
 
 const columns = [
@@ -43,13 +30,6 @@ const columns = [
   },
 ];
 
-<<<<<<< HEAD:FrontEnd/src/components/TSNtable.js
-var i = 0;
-const rows = Array.from({ length: sample.length }, (_, index) => {
-    var selection = sample[i];
-    i++;
-  return createData(index, ...selection);
-=======
 export default function ReactVirtualizedTable({sample = []}) {
 
     var i = 0;
@@ -58,7 +38,6 @@ export default function ReactVirtualizedTable({sample = []}) {
         i++;
   return createData(index, ...selection);
 
->>>>>>> master:src/components/TSNtable.js
 });
 
 const VirtuosoTableComponents = {

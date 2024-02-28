@@ -32,10 +32,19 @@ function App() {
     .catch(err => console.log(err))
   },[])
   
-  const columns = [
+  const TSNcolumns = [
     { field: 'PRD_SERIAL_NUMBER', headerName: 'TSN', width: 200 },
     { field: 'MES_SRNO_STATUS', headerName: 'TSN Status', width: 200 },
     { field: 'VOC_INSPECTION_STATUS', headerName: 'VOC', width: 200 },
+  ];
+
+  const BOMcolumns = [
+    { field: 'COMPONENT_ITEM_NUMBER', headerName: 'Item #', flex: 0.5 },
+    { field: 'COMPONENT_DESCRIPTION', headerName: 'Item Desc', flex: 0.5 },
+  ];
+
+  const BOMrows = [
+    { COMPONENT_ITEM_NUMBER: 3519163, COMPONENT_DESCRIPTION: 'SCREW.DRIVE'},
   ];
 
   return (
@@ -65,23 +74,38 @@ function App() {
             </div>
           </Grid>
           <Grid item xs={10}>
-            <div style={{ height: 400, width: '100%' }}>
+            <div style={{ height: 400, width: '100%' }} className="TSNtable">
               <DataGrid
                 rows={TSNdata.map((t) =>({ id: t.PRD_SERIAL_NUMBER, PRD_SERIAL_NUMBER: t.PRD_SERIAL_NUMBER,
                   MES_SRNO_STATUS: t.MES_SRNO_STATUS, VOC_INSPECTION_STATUS: t.VOC_INSPECTION_STATUS}))}
-                columns={columns}
+                columns={TSNcolumns}
                 initialState={{
                   pagination: {
                     paginationModel: { page: 0, pageSize: 25 },
-                  },
+                  }, 
                 }}
                 pageSizeOptions={[25, 50, 75, 100]}
               />
             </div>
           </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <div style={{ height: 400, width: '100%' }}>
+              <DataGrid
+                rows={BOMrows}
+                getRowId={(row) => row.COMPONENT_ITEM_NUMBER}
+                columns={BOMcolumns} // change this to BOM table data 
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 5 },
+                  },
+                }}
+                pageSizeOptions={[25, 50]}
+              />
+            </div>
+            </Grid>
         </Grid>
       </div>
-    
   );
 }
 
