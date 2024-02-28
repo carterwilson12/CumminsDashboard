@@ -1,45 +1,28 @@
 import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { DataGrid } from '@mui/x-data-grid';
 
-function createData(id, name1, name2, name3, name4, name5) {
-  return {id, name1, name2, name3, name4, name5 };
-}
+const columns = [
+  { field: 'id', headerName: 'Item #', width: 200 },
+  { field: 'item_desc', headerName: 'Item Desc', width: 200 },
+];
 
-export default function DenseTable({sample2 = []}) {
+const rows = [
+  { id: 3519163, item_desc: 'SCREW.DRIVE'},
+];
 
-  var i = 0;
-    const rows = Array.from({ length: sample2.length }, (_, index) => {
-        var selection = sample2[i];
-        i++;
-  return createData(index, ...selection);
-
-});
-
+export default function DataTable() {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell align="left">
-                {row.name1}
-              </TableCell>
-              <TableCell align="left">{row.name2}</TableCell>
-              <TableCell align="left">{row.name3}</TableCell>
-              <TableCell align="left">{row.name4}</TableCell>
-              <TableCell align="left">{row.name5}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+      />
+    </div>
   );
 }
