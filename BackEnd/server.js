@@ -8,8 +8,8 @@ app.use(cors())
 
 const db = mysql.createConnection({
     host: "localhost",
-    user: 'admin',
-    password: '@Apples@1997',
+    user: 'root',
+    password: '',
     database: 'capstone'
 })
 
