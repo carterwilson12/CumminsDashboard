@@ -5,6 +5,9 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
+/* As of now this component is not used from import to App.js 
+   but is being used as reference for the UI */
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 

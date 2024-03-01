@@ -5,6 +5,9 @@ import { Box, Typography, createTheme } from '@mui/material';
 
 import '../App.css'
 
+/* Search Bar component that is currently imported into App.js 
+   Has autocomplete to finish searched items in the category top 100 films */
+
 export default function AutocompleteHint() {
   const hint = React.useRef('');
   const [inputValue, setInputValue] = React.useState('');

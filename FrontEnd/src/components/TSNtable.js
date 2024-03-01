@@ -8,6 +8,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
 
+/* As of now this component is not used from import to App.js 
+   but is being used as reference for the UI */
+
 function createData(id, tsn, status, voc ) {
     return { id, tsn, status, voc };
 }

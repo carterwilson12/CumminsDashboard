@@ -17,7 +17,7 @@ function App() {
   const [data, setData] = useState([])
   const [TSNdata, setTSNdata] = useState([])
 
-
+// Assuimg: data gathering from MES dummy data to WIP selector
   useEffect(()=>{
     fetch('http://localhost:8081/wips')
     .then(res => res.json())
@@ -25,6 +25,7 @@ function App() {
     .catch(err => console.log(err))
   },[])
 
+// Assuming: data gathering from MES dummy data to TSN table
   useEffect(()=>{
     fetch('http://localhost:8081/tsn')
     .then(res => res.json())
@@ -32,21 +33,31 @@ function App() {
     .catch(err => console.log(err))
   },[])
   
+  // TSN display item columns; shouldn't change
   const TSNcolumns = [
     { field: 'PRD_SERIAL_NUMBER', headerName: 'TSN', width: 200 },
     { field: 'MES_SRNO_STATUS', headerName: 'TSN Status', width: 200 },
     { field: 'VOC_INSPECTION_STATUS', headerName: 'VOC', width: 200 },
   ];
 
+  // BOM display item columns; shouldn't change
   const BOMcolumns = [
     { field: 'COMPONENT_ITEM_NUMBER', headerName: 'Item #', flex: 0.5 },
     { field: 'COMPONENT_DESCRIPTION', headerName: 'Item Desc', flex: 0.5 },
   ];
 
+  // BOM item data input
   const BOMrows = [
     { COMPONENT_ITEM_NUMBER: 3519163, COMPONENT_DESCRIPTION: 'SCREW.DRIVE'},
   ];
 
+
+  /* Set up of UI:
+  Top left is where the Search Bar component lives
+  Next is a 2 x 2 grid pattern, holding first the WIP selector underneath the Search Bar
+  Then inside the next grid is the TSN table
+  After that, there is an empty grid to format the next grid evenly
+  Lastly the BOM table holds the last grid*/
   return (
       <div className="App">
         <div className="SearchBar">  

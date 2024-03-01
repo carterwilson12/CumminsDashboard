@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
+/* As of now this component is not used from import to App.js 
+   but is being used as reference for the UI */
+
 const columns = [
   { field: 'id', headerName: 'Item #', width: 200 },
   { field: 'item_desc', headerName: 'Item Desc', width: 200 },
