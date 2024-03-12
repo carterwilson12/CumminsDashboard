@@ -80,7 +80,13 @@ function App() {
   return (
       <div className="App">
          <div className="SearchBar">
-        <input
+          
+        
+        
+      </div>         
+        <Grid container direction="row" justifyContent="flex-start"spacing={2}>
+          <Grid item xs={2}>
+          <input
           type="text"
           placeholder='Search for a WIP'
           id="searchinput"
@@ -88,9 +94,7 @@ function App() {
           value={searchInput}
           onChange={handleSearchInputChange}
         ></input>
-      </div>         
-        <Grid container direction="row" justifyContent="flex-start"spacing={2}>
-          <Grid item xs={2}>
+          <div className='WIPSelectorLabel'>WIP Selector</div>
             <div>
               <ToggleButtonGroup 
               exclusive
@@ -110,7 +114,16 @@ function App() {
               </ToggleButtonGroup>
             </div>
           </Grid>
-          <Grid item xs={10}>
+          {/* WIP Status component goes inside this grid item*/}
+          <Grid item xs={5}>
+
+            
+          </Grid>
+
+
+
+          <Grid item xs={5}>
+            <div className='TSNTableLabel'>TSN Table</div>
             <div style={{ height: 400, width: '100%' }} className="TSNtable">
               <DataGrid
                 rows={TSNdata.map((t) =>({ id: t.PRD_SERIAL_NUMBER, PRD_SERIAL_NUMBER: t.PRD_SERIAL_NUMBER,
@@ -124,9 +137,7 @@ function App() {
                 pageSizeOptions={[25, 50, 75, 100]}
               />
             </div>
-          </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={8}>
+            <div className='BOMTableLabel'>BOM Table</div>
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
                 rows={BOMrows}
@@ -140,7 +151,7 @@ function App() {
                 pageSizeOptions={[25, 50]}
               />
             </div>
-            </Grid>
+          </Grid>
         </Grid>
       </div>
   );

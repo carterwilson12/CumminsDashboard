@@ -19,10 +19,11 @@
       display: flex;
       align-items: left;
       margin-bottom: 10px;
+      width: 100%;
     }
     .WIP-list{
       width: fill;
-      height: 400px;
+      height: 600px;
       overflow-y: scroll;
       overflow-x: hidden;
       
