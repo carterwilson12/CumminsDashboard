@@ -79,14 +79,11 @@ function App() {
   Lastly the BOM table holds the last grid*/
   return (
       <div className="App">
-         <div className="SearchBar">
-          
-        
-        
-      </div>         
+                 
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}>
-          <input
+          <div className="SearchBar">
+         <input
           type="text"
           placeholder='Search for a WIP'
           id="searchinput"
@@ -94,6 +91,9 @@ function App() {
           value={searchInput}
           onChange={handleSearchInputChange}
         ></input>
+        
+        
+      </div> 
           <div className='WIPSelectorLabel'>WIP Selector</div>
             <div>
               <ToggleButtonGroup 
@@ -117,7 +117,7 @@ function App() {
           {/* WIP Status component goes inside this grid item*/}
           <Grid item xs={5}>
 
-            
+
           </Grid>
 
 
