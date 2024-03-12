@@ -15,7 +15,11 @@
       border-radius: 20px;
       border: 1px solid black;
     }
-    
+    .SearchBar{
+      display: flex;
+      align-items: left;
+      margin-bottom: 10px;
+    }
     .WIP-list{
       width: fill;
       height: 400px;

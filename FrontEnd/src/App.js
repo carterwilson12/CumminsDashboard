@@ -8,20 +8,39 @@ import { DataGrid } from '@mui/x-data-grid';
 
   
 function App() {
-  const [currWIP, handleWIPselect] = React.useState()
+  const [currWIP, handleWIPselect] = React.useState();
+  const [searchInput, setSearchInput] = useState('');
+  
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [TSNdata, setTSNdata] = useState([]);
+
+
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+    filterWIPs(event.target.value);
+  };
+
+
   //Handle WIP selector change
   const handleChange = (event, newWIP) => {
     handleWIPselect(newWIP)
   }
+
+  //
+  const filterWIPs = (input) => {
+    const filteredWIPs = data.filter((d) =>
+      d.WIP_JOB_NUMBER.toString().includes(input)
+    );
+    setFilteredData(filteredWIPs);
+  };
   
-  const [data, setData] = useState([])
-  const [TSNdata, setTSNdata] = useState([])
 
 // Assuimg: data gathering from MES dummy data to WIP selector
   useEffect(()=>{
     fetch('http://localhost:8081/wips')
     .then(res => res.json())
-    .then(data => setData(data))
+    .then(data => {setData(data); setFilteredData(data);})
     .catch(err => console.log(err))
   },[])
 
@@ -60,9 +79,16 @@ function App() {
   Lastly the BOM table holds the last grid*/
   return (
       <div className="App">
-        <div className="SearchBar">  
-          <AutocompleteHint></AutocompleteHint> 
-        </div>          
+         <div className="SearchBar">
+        <input
+          type="text"
+          placeholder='Search for a WIP'
+          id="searchinput"
+          name="searchinput"
+          value={searchInput}
+          onChange={handleSearchInputChange}
+        ></input>
+      </div>         
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}>
             <div>
@@ -74,7 +100,7 @@ function App() {
               aria-label="Vertical button group" 
               variant="contained"
               >
-                {data.map((d) =>(
+                {filteredData.map((d) =>(
                   <ToggleButton style={{
                     backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
                     }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button">
