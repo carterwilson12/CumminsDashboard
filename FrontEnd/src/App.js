@@ -1,8 +1,5 @@
 import './App.css';
-import AutocompleteHint from './components/autocomplete';
-// import TSNtable from './components/TSNtable';
-// import BOMtable from './components/BOMtable'
-import { Button, ButtonGroup, ToggleButtonGroup, ToggleButton, Grid, Box} from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, Grid} from '@mui/material';
 import React,{useState, useEffect} from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -13,8 +10,8 @@ function App() {
   
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [TSNdata, setTSNdata] = useState([]);
-
+  const [TSNdataID, setTSNdataID] = useState([]);
+  const [BOMdata, setBOMData] = useState([]);
 
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
@@ -45,29 +42,31 @@ function App() {
   },[])
 
 // Assuming: data gathering from MES dummy data to TSN table
-  useEffect(()=>{
-    fetch('http://localhost:8081/tsn')
+  const TSN = (value) =>{
+    fetch(`http://localhost:8081/tsn_id/${value}`)
     .then(res => res.json())
-    .then(TSNdata => setTSNdata(TSNdata))
+    .then(TSNdataID => setTSNdataID(TSNdataID))
     .catch(err => console.log(err))
-  },[])
-  
+}
+
+const BOM = (value) =>{
+  fetch(`http://localhost:8081/bom/${value}`)
+  .then(res => res.json())
+  .then(BOMdata => setBOMData(BOMdata))
+  .catch(err => console.log(err))
+}
+
   // TSN display item columns; shouldn't change
   const TSNcolumns = [
-    { field: 'PRD_SERIAL_NUMBER', headerName: 'TSN', width: 200 },
+    { field: 'id', headerName: 'TSN', width: 200 },
     { field: 'MES_SRNO_STATUS', headerName: 'TSN Status', width: 200 },
     { field: 'VOC_INSPECTION_STATUS', headerName: 'VOC', width: 200 },
   ];
 
   // BOM display item columns; shouldn't change
   const BOMcolumns = [
-    { field: 'COMPONENT_ITEM_NUMBER', headerName: 'Item #', flex: 0.5 },
+    { field: 'id', headerName: 'Item #', flex: 0.5 },
     { field: 'COMPONENT_DESCRIPTION', headerName: 'Item Desc', flex: 0.5 },
-  ];
-
-  // BOM item data input
-  const BOMrows = [
-    { COMPONENT_ITEM_NUMBER: 3519163, COMPONENT_DESCRIPTION: 'SCREW.DRIVE'},
   ];
 
 
@@ -107,8 +106,8 @@ function App() {
                 {filteredData.map((d) =>(
                   <ToggleButton style={{
                     backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
-                    }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button">
-                    {d.WIP_JOB_NUMBER}
+                    }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER))}>
+                    {d.WIP_JOB_NUMBER} - QTY:{d.WIP_JOB_QTY}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
@@ -126,7 +125,7 @@ function App() {
             <div className='TSNTableLabel'>TSN Table</div>
             <div style={{ height: 400, width: '100%' }} className="TSNtable">
               <DataGrid
-                rows={TSNdata.map((t) =>({ id: t.PRD_SERIAL_NUMBER, PRD_SERIAL_NUMBER: t.PRD_SERIAL_NUMBER,
+                rows={TSNdataID.map((t) =>({ id: t.PRD_SERIAL_NUMBER, wip: t.WIP_JOB_NUMBER, id21: t.ID21_ITEM_NUMBER,
                   MES_SRNO_STATUS: t.MES_SRNO_STATUS, VOC_INSPECTION_STATUS: t.VOC_INSPECTION_STATUS}))}
                 columns={TSNcolumns}
                 initialState={{
@@ -140,12 +139,11 @@ function App() {
             <div className='BOMTableLabel'>BOM Table</div>
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
-                rows={BOMrows}
-                getRowId={(row) => row.COMPONENT_ITEM_NUMBER}
+                rows={BOMdata.map((b) =>({ id: b.COMPONENT_ITEM_NUMBER, COMPONENT_DESCRIPTION: b.COMPONENT_DESCRIPTION}))}
                 columns={BOMcolumns} // change this to BOM table data 
                 initialState={{
                   pagination: {
-                    paginationModel: { page: 0, pageSize: 5 },
+                    paginationModel: { page: 0, pageSize: 25 },
                   },
                 }}
                 pageSizeOptions={[25, 50]}

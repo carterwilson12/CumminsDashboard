@@ -38,15 +38,27 @@ app.get('/tsn', (req, res)=> {
 })
 
 app.get("/tsn_id/:id", (req,res)=>{
-
     const id = req.params.id;
-     db.query("SELECT * FROM posts WHERE id = ?", id, 
-     (err,result)=>{
+    db.query("SELECT * FROM mes_assy_job_info WHERE WIP_JOB_NUMBER = ?", id, 
+    (err,result)=>{
         if(err) {
         console.log(err)
         } 
         res.send(result)
-        });   });
+        });   
+    });
+
+app.get("/bom/:id", (req,res)=>{
+    const id = req.params.id;
+
+    db.query("SELECT * FROM mes_bom_components WHERE WIP_JOB_NUMBER = ?", id, 
+    (err,result)=>{
+        if(err) {
+        console.log(err)
+        } 
+        res.send(result)
+        });   
+    });
 
 app.listen(8081, ()=>{
     console.log("Running");
