@@ -34,7 +34,7 @@ function App() {
   };
   
 
-// Assuimg: data gathering from MES dummy data to WIP selector
+// data gathering from MES dummy data to WIP selector
   useEffect(()=>{
     fetch('http://localhost:8081/wips')
     .then(res => res.json())
@@ -42,6 +42,7 @@ function App() {
     .catch(err => console.log(err))
   },[])
 
+// data gathering from MES dummy data to WIP scope
   const WIP = (value) =>{
     fetch(`http://localhost:8081/wip/${value}`)
     .then(res => res.json())
@@ -49,7 +50,7 @@ function App() {
     .catch(err => console.log(err))
   }
 
-// Assuming: data gathering from MES dummy data to TSN table
+// data gathering from MES dummy data to TSN table
   const TSN = (value) =>{
     fetch(`http://localhost:8081/tsn/${value}`)
     .then(res => res.json())
@@ -57,6 +58,7 @@ function App() {
     .catch(err => console.log(err))
 }
 
+// data gathering from MES dummy data to BOM table
 const BOM = (value) =>{
   fetch(`http://localhost:8081/bom/${value}`)
   .then(res => res.json())
@@ -80,10 +82,10 @@ const BOM = (value) =>{
 
   /* Set up of UI:
   Top left is where the Search Bar component lives
-  Next is a 2 x 2 grid pattern, holding first the WIP selector underneath the Search Bar
-  Then inside the next grid is the TSN table
-  After that, there is an empty grid to format the next grid evenly
-  Lastly the BOM table holds the last grid*/
+  Underneath is the WIP selector grid, that stretches to the bottom of the screen
+  Then placed in the middle is the WIP scope grid, leaving an empty space underneath
+  After that, there is the TSN table placed to the right side of screen
+  Lastly the BOM table is in a grid in the bottom right, under the TSN table */
   return (
       <div className="App">
                  
@@ -204,7 +206,7 @@ const BOM = (value) =>{
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
                 rows={BOMdata.map((b) =>({ id: b.COMPONENT_ITEM_NUMBER, COMPONENT_DESCRIPTION: b.COMPONENT_DESCRIPTION}))}
-                columns={BOMcolumns} // change this to BOM table data 
+                columns={BOMcolumns}
                 initialState={{
                   pagination: {
                     paginationModel: { page: 0, pageSize: 25 },
