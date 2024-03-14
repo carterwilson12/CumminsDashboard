@@ -27,17 +27,18 @@ app.get('/wips', (req, res)=> {
     })
 })
 
-app.get('/tsn', (req, res)=> {
-    const sql = "SELECT * FROM mes_assy_job_info";
-    db.query(sql, (err, data)=> {
+app.get("/wip/:id", (req,res)=>{
+    const id = req.params.id;
+    db.query("SELECT * FROM mes_wip_info WHERE WIP_JOB_NUMBER = ?", id, 
+    (err,result)=>{
         if(err) {
-            return res.json(err)
-        }
-        return res.json(data);
-    })
-})
+        console.log(err)
+        } 
+        res.send(result)
+        });   
+    });
 
-app.get("/tsn_id/:id", (req,res)=>{
+app.get("/tsn/:id", (req,res)=>{
     const id = req.params.id;
     db.query("SELECT * FROM mes_assy_job_info WHERE WIP_JOB_NUMBER = ?", id, 
     (err,result)=>{

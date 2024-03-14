@@ -1,8 +1,7 @@
 import './App.css';
-import { ToggleButtonGroup, ToggleButton, Grid} from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import React,{useState, useEffect} from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-
   
 function App() {
   const [currWIP, handleWIPselect] = React.useState();
@@ -12,6 +11,8 @@ function App() {
   const [filteredData, setFilteredData] = useState([]);
   const [TSNdataID, setTSNdataID] = useState([]);
   const [BOMdata, setBOMData] = useState([]);
+  const [WIPData, setWIPData] = useState([]);
+
 
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
@@ -41,9 +42,16 @@ function App() {
     .catch(err => console.log(err))
   },[])
 
+  const WIP = (value) =>{
+    fetch(`http://localhost:8081/wip/${value}`)
+    .then(res => res.json())
+    .then(WIPData => setWIPData(WIPData))
+    .catch(err => console.log(err))
+  }
+
 // Assuming: data gathering from MES dummy data to TSN table
   const TSN = (value) =>{
-    fetch(`http://localhost:8081/tsn_id/${value}`)
+    fetch(`http://localhost:8081/tsn/${value}`)
     .then(res => res.json())
     .then(TSNdataID => setTSNdataID(TSNdataID))
     .catch(err => console.log(err))
@@ -106,8 +114,8 @@ const BOM = (value) =>{
                 {filteredData.map((d) =>(
                   <ToggleButton style={{
                     backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
-                    }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER))}>
-                    {d.WIP_JOB_NUMBER} - QTY:{d.WIP_JOB_QTY}
+                    }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIP(d.WIP_JOB_NUMBER))}>
+                    {d.WIP_JOB_NUMBER} - QTY: {d.WIP_JOB_QTY}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
@@ -115,8 +123,64 @@ const BOM = (value) =>{
           </Grid>
           {/* WIP Status component goes inside this grid item*/}
           <Grid item xs={5}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 200 }} aria-label="spanning table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" colSpan={3}>
+                      WIP Scope
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model #</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {WIPData.map((b) =>(
+                    <TableRow>
+                      <TableCell>{b.MODEL_NUMBER}</TableCell>
+                      <TableCell>{b.ID21_ITEM_NUMBER}</TableCell>
+                      <TableCell>{b.WIP_TYPE}</TableCell>
+                    </TableRow>
+                    ))}
+                </TableBody>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Turbo Type</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Assembly Line</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Customer</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {WIPData.map((b) =>(
+                    <TableRow>
+                      <TableCell>{b.TURBO_TYPE}</TableCell>
+                      <TableCell>{b.ASSEMBLY_LINE}</TableCell>
+                      <TableCell>{b.CUSTOMER_SHORT_NAME}</TableCell>
+                    </TableRow>
+                    ))}
+                </TableBody>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>SCH Ship</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Job Start</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Last Update</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {WIPData.map((b) =>(
+                    <TableRow>
+                      <TableCell>{b.SCH_SHIP_DATE}</TableCell>
+                      <TableCell>{b.JOB_START_DATE}</TableCell>
+                      <TableCell>{b.LAST_UPDATE_DATE}</TableCell>
+                    </TableRow>
+                    ))}
 
-
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
 
 
