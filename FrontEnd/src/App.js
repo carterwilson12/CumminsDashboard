@@ -79,19 +79,6 @@ const BOM = (value) =>{
     { field: 'COMPONENT_DESCRIPTION', headerName: 'Item Desc', flex: 0.5 },
   ];
 
-  // QTY display item columns; shouldn't change
-  const QTYcolumns = [
-    { field: 'id', headerName: 'Open (other)', width: 150 },
-    { field: 'rejected', headerName: 'Rejected (03)', width: 150},
-    { field: 'close', headerName: 'Close (04)', width: 150},
-  ];
-  
-  // Need to hook up data to this row for QTY Breakdown table
-  const QTYrows = [
-    { id: 0, rejected: 8, close: 90 },
-  ];
-
-
   /* Set up of UI:
   Top left is where the Search Bar component lives
   Underneath is the WIP selector grid, that stretches to the bottom of the screen
@@ -136,18 +123,24 @@ const BOM = (value) =>{
           </Grid>
           <Grid item xs={5}>
           <div className='QtyBreakdownTable'>Quantity Breakdown</div>
-          <div style={{ height: 400, width: '100%' }}>
-            <DataGrid
-              rows={QTYrows}
-              columns={QTYcolumns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
-              pageSizeOptions={[5, 10]}
-            />
-          </div>
+            <TableContainer component={Paper}>
+              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={{backgroundColor: '#df1f1f' }} sx={{ fontWeight: 'bold', m: 1 }}>Rejected (03)</TableCell>
+                    <TableCell style={{backgroundColor: '#0ab919' }} sx={{ fontWeight: 'bold', m: 1 }}>Closed (04)</TableCell>
+                    <TableCell style={{backgroundColor: '#ebc90a' }} sx={{ fontWeight: 'bold', m: 1 }}>Open (other)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                    <TableRow>
+                      <TableCell>0</TableCell>
+                      <TableCell>17</TableCell>
+                      <TableCell>30</TableCell>
+                    </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
           <div className='WIPscope'>WIP Scope</div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
