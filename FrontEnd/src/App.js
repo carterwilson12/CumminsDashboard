@@ -1,8 +1,7 @@
 import './App.css';
-import { ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button} from '@mui/material';
 import React,{useState, useEffect} from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-  
+import { DataGrid } from '@mui/x-data-grid';  
 function App() {
   const [currWIP, handleWIPselect] = React.useState();
   const [searchInput, setSearchInput] = useState('');
@@ -18,13 +17,30 @@ function App() {
     setSearchInput(event.target.value);
     filterWIPs(event.target.value);
   };
-
+  
+  const downloadCSV = () => {
+    console.log(TSNdataID)
+    const TSNdata = TSNdataID.map((t) =>({ id: t.PRD_SERIAL_NUMBER, MES_SRNO_STATUS: t.MES_SRNO_STATUS, VOC_INSPECTION_STATUS: t.VOC_INSPECTION_STATUS}))
+      console.log(TSNdata)
+    const csvData = convertArrayOfObjectsToCSV(TSNdata);
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   //Handle WIP selector change
   const handleChange = (event, newWIP) => {
     handleWIPselect(newWIP)
   }
-
+  const convertArrayOfObjectsToCSV = (data) => {
+    const csv = data.map(row => Object.values(row).join(','));
+    return ['TSN, MES_SRNO_STATUS, VOC'].concat(csv).join('\n');
+  };
   //
   const filterWIPs = (input) => {
     const filteredWIPs = data.filter((d) =>
@@ -189,6 +205,7 @@ const BOM = (value) =>{
 
           <Grid item xs={5}>
             <div className='TSNTableLabel'>TSN Table</div>
+            
             <div style={{ height: 400, width: '100%' }} className="TSNtable">
               <DataGrid
                 rows={TSNdataID.map((t) =>({ id: t.PRD_SERIAL_NUMBER, wip: t.WIP_JOB_NUMBER, id21: t.ID21_ITEM_NUMBER,
@@ -202,6 +219,7 @@ const BOM = (value) =>{
                 pageSizeOptions={[25, 50, 75, 100]}
               />
             </div>
+            <Button onClick={downloadCSV}>Export to excel</Button>
             <div className='BOMTableLabel'>BOM Table</div>
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
