@@ -133,7 +133,7 @@ const BOM = (value) =>{
                   <ToggleButton style={{
                     backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
                     }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIP(d.WIP_JOB_NUMBER))}>
-                    {d.WIP_JOB_NUMBER} - QTY: {d.WIP_JOB_QTY}
+                    WIP: {d.WIP_JOB_NUMBER} <br/>QTY: {d.WIP_JOB_QTY}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
@@ -149,54 +149,32 @@ const BOM = (value) =>{
                       WIP Scope
                     </TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model #</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                {WIPData.map((b) =>(
+                  {WIPData.map((b) =>(
                     <TableRow>
-                      <TableCell>{b.MODEL_NUMBER}</TableCell>
-                      <TableCell>{b.ID21_ITEM_NUMBER}</TableCell>
-                      <TableCell>{b.WIP_TYPE}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model # <br/> {b.MODEL_NUMBER}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21 <br/>{b.ID21_ITEM_NUMBER}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type<br/>{b.WIP_TYPE}</TableCell>
                     </TableRow>
                     ))}
-                </TableBody>
+                </TableHead>
                 <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Turbo Type</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Assembly Line</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Customer</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
-                      <TableCell>{b.TURBO_TYPE}</TableCell>
-                      <TableCell>{b.ASSEMBLY_LINE}</TableCell>
-                      <TableCell>{b.CUSTOMER_SHORT_NAME}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Turbo Type<br/>{b.TURBO_TYPE}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Assembly Line<br/>{b.ASSEMBLY_LINE}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Customer<br/>{b.CUSTOMER_SHORT_NAME}</TableCell>
                     </TableRow>
                     ))}
-                </TableBody>
+                </TableHead>
                 <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>SCH Ship</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Job Start</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Last Update</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
                 {WIPData.map((b) =>(
-                    <TableRow>
-                      <TableCell>{b.SCH_SHIP_DATE}</TableCell>
-                      <TableCell>{b.JOB_START_DATE}</TableCell>
-                      <TableCell>{b.LAST_UPDATE_DATE}</TableCell>
-                    </TableRow>
-                    ))}
-
-                </TableBody>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>SCH Ship <br/>{b.SCH_SHIP_DATE}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Job Start<br/>{b.JOB_START_DATE}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Last Update<br/>{b.LAST_UPDATE_DATE}</TableCell>
+                  </TableRow>
+                  ))}
+                </TableHead>
               </Table>
             </TableContainer>
           </Grid>
