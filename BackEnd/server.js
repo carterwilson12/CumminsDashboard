@@ -18,7 +18,7 @@ app.get('/', (re, res)=> {
 })
 
 app.get('/wips', (req, res)=> {
-    const sql = "SELECT * FROM mes_wip_info";
+    const sql = "SELECT WIP_JOB_NUMBER, WIP_JOB_QTY FROM mes_wip_info";
     db.query(sql, (err, data)=> {
         if(err) {
             return res.json(err)
@@ -52,7 +52,7 @@ app.get("/tsn/:id", (req,res)=>{
 app.get("/bom/:id", (req,res)=>{
     const id = req.params.id;
 
-    db.query("SELECT * FROM mes_bom_components WHERE WIP_JOB_NUMBER = ?", id, 
+    db.query("SELECT * FROM mes_bom_components WHERE WIP_JOB_NUMBER = ? AND PICK_FLAG ='Y'", id, 
     (err,result)=>{
         if(err) {
         console.log(err)

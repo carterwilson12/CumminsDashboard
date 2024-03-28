@@ -1,8 +1,7 @@
 import './App.css';
-import { ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button} from '@mui/material';
 import React,{useState, useEffect} from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-  
+import { DataGrid } from '@mui/x-data-grid';  
 function App() {
   const [currWIP, handleWIPselect] = React.useState();
   const [searchInput, setSearchInput] = useState('');
@@ -18,13 +17,30 @@ function App() {
     setSearchInput(event.target.value);
     filterWIPs(event.target.value);
   };
-
+  
+  const downloadCSV = () => {
+    console.log(TSNdataID)
+    const TSNdata = TSNdataID.map((t) =>({ id: t.PRD_SERIAL_NUMBER, MES_SRNO_STATUS: t.MES_SRNO_STATUS, VOC_INSPECTION_STATUS: t.VOC_INSPECTION_STATUS}))
+      console.log(TSNdata)
+    const csvData = convertArrayOfObjectsToCSV(TSNdata);
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   //Handle WIP selector change
   const handleChange = (event, newWIP) => {
     handleWIPselect(newWIP)
   }
-
+  const convertArrayOfObjectsToCSV = (data) => {
+    const csv = data.map(row => Object.values(row).join(','));
+    return ['TSN, MES_SRNO_STATUS, VOC'].concat(csv).join('\n');
+  };
   //
   const filterWIPs = (input) => {
     const filteredWIPs = data.filter((d) =>
@@ -115,7 +131,7 @@ const BOM = (value) =>{
                   <ToggleButton style={{
                     backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
                     }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIP(d.WIP_JOB_NUMBER))}>
-                    {d.WIP_JOB_NUMBER} - QTY: {d.WIP_JOB_QTY}
+                    WIP: {d.WIP_JOB_NUMBER} <br/>QTY: {d.WIP_JOB_QTY}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
@@ -154,45 +170,30 @@ const BOM = (value) =>{
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
-                      <TableCell>{b.MODEL_NUMBER}</TableCell>
-                      <TableCell>{b.ID21_ITEM_NUMBER}</TableCell>
-                      <TableCell>{b.WIP_TYPE}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model # <br/> {b.MODEL_NUMBER}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21 <br/>{b.ID21_ITEM_NUMBER}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type<br/>{b.WIP_TYPE}</TableCell>
                     </TableRow>
                     ))}
-                </TableBody>
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Turbo Type</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Assembly Line</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Customer</TableCell>
-                  </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableHead>
                 {WIPData.map((b) =>(
                     <TableRow>
-                      <TableCell>{b.TURBO_TYPE}</TableCell>
-                      <TableCell>{b.ASSEMBLY_LINE}</TableCell>
-                      <TableCell>{b.CUSTOMER_SHORT_NAME}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Turbo Type<br/>{b.TURBO_TYPE}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Assembly Line<br/>{b.ASSEMBLY_LINE}</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Customer<br/>{b.CUSTOMER_SHORT_NAME}</TableCell>
                     </TableRow>
                     ))}
-                </TableBody>
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>SCH Ship</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Job Start</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Last Update</TableCell>
-                  </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableHead>
                 {WIPData.map((b) =>(
-                    <TableRow>
-                      <TableCell>{b.SCH_SHIP_DATE}</TableCell>
-                      <TableCell>{b.JOB_START_DATE}</TableCell>
-                      <TableCell>{b.LAST_UPDATE_DATE}</TableCell>
-                    </TableRow>
-                    ))}
-
-                </TableBody>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>SCH Ship <br/>{b.SCH_SHIP_DATE}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Job Start<br/>{b.JOB_START_DATE}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Last Update<br/>{b.LAST_UPDATE_DATE}</TableCell>
+                  </TableRow>
+                  ))}
+                </TableHead>
               </Table>
             </TableContainer>
           </Grid>
@@ -201,6 +202,7 @@ const BOM = (value) =>{
 
           <Grid item xs={5}>
             <div className='TSNTableLabel'>TSN Table</div>
+            
             <div style={{ height: 400, width: '100%' }} className="TSNtable">
               <DataGrid
                 rows={TSNdataID.map((t) =>({ id: t.PRD_SERIAL_NUMBER, wip: t.WIP_JOB_NUMBER, id21: t.ID21_ITEM_NUMBER,
@@ -214,6 +216,7 @@ const BOM = (value) =>{
                 pageSizeOptions={[25, 50, 75, 100]}
               />
             </div>
+            <Button onClick={downloadCSV}>Download Excel file</Button>
             <div className='BOMTableLabel'>BOM Table</div>
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
