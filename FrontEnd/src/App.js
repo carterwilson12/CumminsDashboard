@@ -138,6 +138,7 @@ const BOM = (value) =>{
             </div>
           </Grid>
           <Grid item xs={5}>
+          <div style={{height: 30}}></div>
           <div className='QtyBreakdownTable'>Quantity Breakdown</div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 100, minWidth: 200 }} aria-label="spanning table">
@@ -157,17 +158,10 @@ const BOM = (value) =>{
                 </TableBody>
               </Table>
             </TableContainer>
-          <div style={{height: 325}}></div>
+          <div style={{height: 295}}></div>
           <div className='WIPscope'>WIP Scope</div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model #</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type</TableCell>
-                  </TableRow>
-                </TableHead>
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
@@ -202,6 +196,7 @@ const BOM = (value) =>{
 
 
           <Grid item xs={5}>
+          <Button onClick={downloadCSV}>Download Excel file</Button>
             <div className='TSNTableLabel'>TSN Table</div>
             
             <div style={{ height: 400, width: '100%' }} className="TSNtable">
@@ -217,7 +212,7 @@ const BOM = (value) =>{
                 pageSizeOptions={[25, 50, 75, 100]}
               />
             </div>
-            <Button onClick={downloadCSV}>Download Excel file</Button>
+           
             <div className='BOMTableLabel'>BOM Table</div>
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
