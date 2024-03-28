@@ -197,7 +197,7 @@ const BOM = (value) =>{
                 pageSizeOptions={[25, 50, 75, 100]}
               />
             </div>
-            <Button onClick={downloadCSV}>Export to excel</Button>
+            <Button onClick={downloadCSV}>Download Excel file</Button>
             <div className='BOMTableLabel'>BOM Table</div>
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
