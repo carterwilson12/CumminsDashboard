@@ -140,7 +140,7 @@ const BOM = (value) =>{
           <Grid item xs={5}>
           <div className='QtyBreakdownTable'>Quantity Breakdown</div>
             <TableContainer component={Paper}>
-              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
+              <Table sx={{ height: 100, minWidth: 200 }} aria-label="spanning table">
                 <TableHead>
                   <TableRow>
                     <TableCell style={{backgroundColor: '#df1f1f' }} sx={{ fontWeight: 'bold', m: 1 }}>Rejected (03)</TableCell>
@@ -157,6 +157,7 @@ const BOM = (value) =>{
                 </TableBody>
               </Table>
             </TableContainer>
+          <div style={{height: 325}}></div>
           <div className='WIPscope'>WIP Scope</div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
@@ -175,7 +176,7 @@ const BOM = (value) =>{
                       <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type<br/>{b.WIP_TYPE}</TableCell>
                     </TableRow>
                     ))}
-                </TableHead>
+                </TableBody>
                 <TableHead>
                 {WIPData.map((b) =>(
                     <TableRow>
