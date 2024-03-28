@@ -1,7 +1,8 @@
 import './App.css';
-import { ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import { Typography, Stack, Switch, FormControlLabel, FormGroup, Input, InputLabel, FormControl, Button, ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import React,{useState, useEffect} from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import { styled } from '@mui/material/styles';
   
 function App() {
   const [currWIP, handleWIPselect] = React.useState();
@@ -33,7 +34,47 @@ function App() {
     setFilteredData(filteredWIPs);
   };
   
-
+  const AntSwitch = styled(Switch)(({ theme }) => ({
+    width: 28,
+    height: 16,
+    padding: 0,
+    display: 'flex',
+    '&:active': {
+      '& .MuiSwitch-thumb': {
+        width: 15,
+      },
+      '& .MuiSwitch-switchBase.Mui-checked': {
+        transform: 'translateX(9px)',
+      },
+    },
+    '& .MuiSwitch-switchBase': {
+      padding: 2,
+      '&.Mui-checked': {
+        transform: 'translateX(12px)',
+        color: '#fff',
+        '& + .MuiSwitch-track': {
+          opacity: 1,
+          backgroundColor: theme.palette.mode === 'green' ? '#177ddc' : '#1890ff',
+        },
+      },
+    },
+    '& .MuiSwitch-thumb': {
+      boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      transition: theme.transitions.create(['width'], {
+        duration: 200,
+      }),
+    },
+    '& .MuiSwitch-track': {
+      borderRadius: 16 / 2,
+      opacity: 1,
+      backgroundColor:
+        theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
+      boxSizing: 'border-box',
+    },
+  }));
 // data gathering from MES dummy data to WIP selector
   useEffect(()=>{
     fetch('http://localhost:8081/wips')
@@ -91,6 +132,7 @@ const BOM = (value) =>{
                  
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}>
+<<<<<<< Updated upstream
           <div className="SearchBar">
          <input
           type="text"
@@ -104,6 +146,33 @@ const BOM = (value) =>{
         
       </div> 
           <div className='WIPSelectorLabel'>WIP Selector</div>
+=======
+            <div>
+              <FormControl>
+                <InputLabel htmlFor="my-input">Enter a WIP or TSN #</InputLabel>
+                <Input id="my-input" aria-describedby="my-helper-text" />
+              </FormControl>
+
+              <FormGroup>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography>WIP</Typography>
+                  <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+                  <Typography>TSN</Typography>
+                </Stack>
+              </FormGroup>
+
+              <Button
+                variant="outlined" color="success"
+                value={Input}
+                onClick={handleSearchInputChange}
+              >
+                Search
+              </Button>
+            </div> 
+            <div className='WIPSelectorLabel'>
+                WIP Selector
+            </div>
+>>>>>>> Stashed changes
             <div>
               <ToggleButtonGroup 
               exclusive
