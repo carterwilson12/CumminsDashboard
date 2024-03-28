@@ -165,27 +165,27 @@ const BOM = (value) =>{
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model # <br/> {b.MODEL_NUMBER}</TableCell>
-                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21 <br/>{b.ID21_ITEM_NUMBER}</TableCell>
-                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type<br/>{b.WIP_TYPE}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Model #</span> <br/> {b.MODEL_NUMBER}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>ID21</span> <br/>{b.ID21_ITEM_NUMBER}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>WIP Type</span><br/>{b.WIP_TYPE}</TableCell>
                     </TableRow>
                     ))}
                 </TableBody>
                 <TableHead>
                 {WIPData.map((b) =>(
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Turbo Type<br/>{b.TURBO_TYPE}</TableCell>
-                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Assembly Line<br/>{b.ASSEMBLY_LINE}</TableCell>
-                      <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Customer<br/>{b.CUSTOMER_SHORT_NAME}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Turbo Type</span><br/>{b.TURBO_TYPE}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Assembly Line</span><br/>{b.ASSEMBLY_LINE}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Customer</span><br/>{b.CUSTOMER_SHORT_NAME}</TableCell>
                     </TableRow>
                     ))}
                 </TableHead>
                 <TableHead>
                 {WIPData.map((b) =>(
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>SCH Ship <br/>{b.SCH_SHIP_DATE}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Job Start<br/>{b.JOB_START_DATE}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Last Update<br/>{b.LAST_UPDATE_DATE}</TableCell>
+                    <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>SCH Ship</span> <br/>{b.SCH_SHIP_DATE}</TableCell>
+                    <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Job Start</span><br/>{b.JOB_START_DATE}</TableCell>
+                    <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Last Update</span><br/>{b.LAST_UPDATE_DATE}</TableCell>
                   </TableRow>
                   ))}
                 </TableHead>
