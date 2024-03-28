@@ -95,13 +95,11 @@ const BOM = (value) =>{
     { field: 'COMPONENT_DESCRIPTION', headerName: 'Item Desc', flex: 0.5 },
   ];
 
-
   /* Set up of UI:
   Top left is where the Search Bar component lives
   Underneath is the WIP selector grid, that stretches to the bottom of the screen
-  Then placed in the middle is the WIP scope grid, leaving an empty space underneath
-  After that, there is the TSN table placed to the right side of screen
-  Lastly the BOM table is in a grid in the bottom right, under the TSN table */
+  Then placed in the middle is the Quantity Breadown Table & WIP Scope grid
+  And lastly the TSN Table & BOM Table grid to the right */
   return (
       <div className="App">
                  
@@ -117,7 +115,7 @@ const BOM = (value) =>{
           onChange={handleSearchInputChange}
         ></input>
         
-        
+
       </div> 
           <div className='WIPSelectorLabel'>WIP Selector</div>
             <div>
@@ -139,17 +137,38 @@ const BOM = (value) =>{
               </ToggleButtonGroup>
             </div>
           </Grid>
-          {/* WIP Status component goes inside this grid item*/}
           <Grid item xs={5}>
+          <div className='QtyBreakdownTable'>Quantity Breakdown</div>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 200 }} aria-label="spanning table">
+              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center" colSpan={3}>
-                      WIP Scope
-                    </TableCell>
+                    <TableCell style={{backgroundColor: '#df1f1f' }} sx={{ fontWeight: 'bold', m: 1 }}>Rejected (03)</TableCell>
+                    <TableCell style={{backgroundColor: '#0ab919' }} sx={{ fontWeight: 'bold', m: 1 }}>Closed (04)</TableCell>
+                    <TableCell style={{backgroundColor: '#ebc90a' }} sx={{ fontWeight: 'bold', m: 1 }}>Open (other)</TableCell>
                   </TableRow>
-                  {WIPData.map((b) =>(
+                </TableHead>
+                <TableBody>
+                    <TableRow>
+                      <TableCell>0</TableCell>
+                      <TableCell>17</TableCell>
+                      <TableCell>30</TableCell>
+                    </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          <div className='WIPscope'>WIP Scope</div>
+            <TableContainer component={Paper}>
+              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model #</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {WIPData.map((b) =>(
                     <TableRow>
                       <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model # <br/> {b.MODEL_NUMBER}</TableCell>
                       <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21 <br/>{b.ID21_ITEM_NUMBER}</TableCell>
