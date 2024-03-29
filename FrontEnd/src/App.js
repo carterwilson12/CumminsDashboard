@@ -1,17 +1,12 @@
 import './App.css';
-import { Typography, Stack, Switch, FormControlLabel, FormGroup, Input, InputLabel, FormControl, Button, ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import { Stack, Switch, FormControlLabel, FormGroup, Input, InputLabel, FormControl, Button, ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import React,{useState, useEffect} from 'react';
-<<<<<<< Updated upstream
 import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
-  
-=======
-import { DataGrid } from '@mui/x-data-grid';  
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
->>>>>>> Stashed changes
 function App() {
   const [currWIP, handleWIPselect] = useState();
   const [searchInput, setSearchInput] = useState('');
