@@ -1,19 +1,61 @@
 import './App.css';
 import { Typography, Stack, Switch, FormControlLabel, FormGroup, Input, InputLabel, FormControl, Button, ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import React,{useState, useEffect} from 'react';
+<<<<<<< Updated upstream
 import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
   
+=======
+import { DataGrid } from '@mui/x-data-grid';  
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
+>>>>>>> Stashed changes
 function App() {
-  const [currWIP, handleWIPselect] = React.useState();
+  const [currWIP, handleWIPselect] = useState();
   const [searchInput, setSearchInput] = useState('');
   
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [TSNdataID, setTSNdataID] = useState([]);
+  const [TSN_REJdata, setTSN_REJdata] = useState([]);
   const [BOMdata, setBOMData] = useState([]);
   const [WIPData, setWIPData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: "50%",
+    height: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const handleClassName = (params) => {
+    if(params.row.MES_SRNO_STATUS === "03")
+    {
+      return `status-${params.row.MES_SRNO_STATUS}`
+    }
+    else{
+      return "status-none"
+    }
+  };
+
+  const handleRowClick = (params) => {
+    if(params.row.MES_SRNO_STATUS === "03"){
+      handleOpen()
+      TSN_REJ(params.row.PRD_SERIAL_NUMBER)
+      console.log(params.row.PRD_SERIAL_NUMBER)
+      }
+  };
 
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
@@ -97,6 +139,21 @@ function App() {
     .then(res => res.json())
     .then(TSNdataID => setTSNdataID(TSNdataID))
     .catch(err => console.log(err))
+}
+
+const tsn_rej = TSNdataID.filter(item => item.MES_SRNO_STATUS === '03');
+const tsn_rej_count = tsn_rej.length;
+
+const tsn_close = TSNdataID.filter(item => item.MES_SRNO_STATUS === '04');
+const tsn_close_count = tsn_close.length;
+const tsn_other = TSNdataID.filter(item => item.MES_SRNO_STATUS !== '04');
+const tsn_other_count = tsn_other.length;
+// data gathering from MES dummy data to TSN Compenent Rejected table
+const TSN_REJ = (value) =>{
+  fetch(`http://localhost:8081/tsn_rej/${value}`)
+  .then(res => res.json())
+  .then(TSN_REJdata => setTSN_REJdata(TSN_REJdata))
+  .catch(err => console.log(err))
 }
 
 // data gathering from MES dummy data to BOM table
@@ -209,6 +266,22 @@ const BOM = (value) =>{
                   </TableRow>
                 </TableHead>
                 <TableBody>
+<<<<<<< Updated upstream
+=======
+                    <TableRow>
+                      <TableCell>{tsn_rej_count}</TableCell>
+                      <TableCell>{tsn_close_count}</TableCell>
+                      <TableCell>{tsn_other_count}</TableCell>
+                    </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          
+          <div className='WIPscope'>WIP Scope</div>
+            <TableContainer component={Paper}>
+              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
+                <TableBody>
+>>>>>>> Stashed changes
                 {WIPData.map((b) =>(
                     <TableRow>
                       <TableCell>{b.MODEL_NUMBER}</TableCell>
@@ -258,8 +331,50 @@ const BOM = (value) =>{
 
           <Grid item xs={5}>
             <div className='TSNTableLabel'>TSN Table</div>
+<<<<<<< Updated upstream
             <div style={{ height: 400, width: '100%' }} className="TSNtable">
+=======
+            
+            <div style={{ height: 400, width: '100%' }}>
+>>>>>>> Stashed changes
               <DataGrid
+                sx={{
+                  '& .status-03': {
+                    backgroundColor: "red",
+                    color: "white",
+                    transition: ".2s ease",
+                    '&:hover': {
+                      backgroundColor: "#8B0000",
+                      color: "white",
+                      cursor: "pointer"
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: "#8B0000",
+                      color: "white",
+                      cursor: "pointer",
+                      transition: ".2s ease",
+                      '&:hover': {
+                        backgroundColor: "#8B0000",
+                        color: "white",
+                      },
+                    },
+                  },
+                  '& .status-none': {
+                    backgroundColor: "white",
+                    transition: ".2s ease",
+                    '&:hover': {
+                      backgroundColor: "white",
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: "white",
+                      transition: ".2s ease",
+                      '&:hover': {
+                        backgroundColor: "white",
+                      },
+                    },
+                  },
+                }}
+                getRowClassName={handleClassName}
                 rows={TSNdataID.map((t) =>({ id: t.PRD_SERIAL_NUMBER, wip: t.WIP_JOB_NUMBER, id21: t.ID21_ITEM_NUMBER,
                   MES_SRNO_STATUS: t.MES_SRNO_STATUS, VOC_INSPECTION_STATUS: t.VOC_INSPECTION_STATUS}))}
                 columns={TSNcolumns}
@@ -269,7 +384,31 @@ const BOM = (value) =>{
                   }, 
                 }}
                 pageSizeOptions={[25, 50, 75, 100]}
+                onRowClick= {handleRowClick}
+                disableSelectionOnClick={true}
               />
+              
+              <div>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <DataGrid
+                      rows={TSN_REJdata.map((tr) =>({ id: tr.COMPONENT_ITEM_NUMBER, COMPONENT_DESCRIPTION: tr.COMPONENT_DESCRIPTION}))}
+                      columns={BOMcolumns}
+                      initialState={{
+                        pagination: {
+                          paginationModel: { page: 0, pageSize: 25 },
+                        },
+                      }}
+                      pageSizeOptions={[25, 50]}
+                    />
+                  </Box>
+                </Modal>
+              </div>
             </div>
             <div className='BOMTableLabel'>BOM Table</div>
             <div style={{ height: 400, width: '100%' }}>

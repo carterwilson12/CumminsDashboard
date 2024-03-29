@@ -61,6 +61,18 @@ app.get("/bom/:id", (req,res)=>{
         });   
     });
 
+    app.get("/tsn_rej/:id", (req,res)=>{
+        const id = req.params.id;
+    
+        db.query(`SELECT * FROM mes_scrap_info WHERE TRANSACTION_REFERENCE LIKE %${id}%`, id, 
+        (err,result)=>{
+            if(err) {
+            console.log(err)
+            } 
+            res.send(result)
+            });   
+        });
+
 app.listen(8081, ()=>{
     console.log("Running");
 })
