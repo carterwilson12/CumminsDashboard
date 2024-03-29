@@ -189,7 +189,6 @@ const BOM = (value) =>{
                  
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}>
-<<<<<<< Updated upstream
           <div className="SearchBar">
          <input
           type="text"
@@ -203,33 +202,6 @@ const BOM = (value) =>{
         
       </div> 
           <div className='WIPSelectorLabel'>WIP Selector</div>
-=======
-            <div>
-              <FormControl>
-                <InputLabel htmlFor="my-input">Enter a WIP or TSN #</InputLabel>
-                <Input id="my-input" aria-describedby="my-helper-text" />
-              </FormControl>
-
-              <FormGroup>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Typography>WIP</Typography>
-                  <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
-                  <Typography>TSN</Typography>
-                </Stack>
-              </FormGroup>
-
-              <Button
-                variant="outlined" color="success"
-                value={Input}
-                onClick={handleSearchInputChange}
-              >
-                Search
-              </Button>
-            </div> 
-            <div className='WIPSelectorLabel'>
-                WIP Selector
-            </div>
->>>>>>> Stashed changes
             <div>
               <ToggleButtonGroup 
               exclusive
@@ -266,8 +238,6 @@ const BOM = (value) =>{
                   </TableRow>
                 </TableHead>
                 <TableBody>
-<<<<<<< Updated upstream
-=======
                     <TableRow>
                       <TableCell>{tsn_rej_count}</TableCell>
                       <TableCell>{tsn_close_count}</TableCell>
@@ -281,7 +251,6 @@ const BOM = (value) =>{
             <TableContainer component={Paper}>
               <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
                 <TableBody>
->>>>>>> Stashed changes
                 {WIPData.map((b) =>(
                     <TableRow>
                       <TableCell>{b.MODEL_NUMBER}</TableCell>
@@ -331,12 +300,8 @@ const BOM = (value) =>{
 
           <Grid item xs={5}>
             <div className='TSNTableLabel'>TSN Table</div>
-<<<<<<< Updated upstream
-            <div style={{ height: 400, width: '100%' }} className="TSNtable">
-=======
             
             <div style={{ height: 400, width: '100%' }}>
->>>>>>> Stashed changes
               <DataGrid
                 sx={{
                   '& .status-03': {
