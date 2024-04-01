@@ -17,18 +17,30 @@ app.get('/', (re, res)=> {
     return res.json("response for GET request");
 })
 
-app.get('/wip/search', async (req, res) => {
-    const { query, type } = req.query;
-    let sqlQuery;
+app.get('/search', (req, res) => {
+    const query = req.query;
+    const type = req.type;
+    const line = req.line;
+
+    let baseSqlQuery;
     
     if (type === 'type1') {
-      sqlQuery = 'SELECT * FROM mes_wip_info WHERE WIP_JOB_NUMBER = ?';
+        baseSqlQuery = 'SELECT * FROM mes_wip_info WHERE WIP_JOB_NUMBER = ?';
     } else {
-      sqlQuery = 'SELECT * FROM mes_assy_job_info WHERE PRD_SERIAL_NUMBER = ?';
+        baseSqlQuery = 'SELECT * FROM mes_assy_job_info WHERE PRD_SERIAL_NUMBER = ?';
     }
+
+    // Add line to the SQL query if a line option is selected
+    let sqlQuery = baseSqlQuery;
+    let queryParams = [`%${query}%`];
   
+    if (line && line.trim() !== '') {
+      sqlQuery += ' AND ASSEMBLY_LINE = ?';
+      queryParams.push(line);
+    }
+
     try {
-      const results = await db.query(sqlQuery, [`%${query}%`]); // Assume db.query is a promisified query function
+      const results = db.query(sqlQuery, queryParams); // Assume db.query is a promisified query function
       res.json(results);
     } catch (error) {
       res.status(500).send('Server error');

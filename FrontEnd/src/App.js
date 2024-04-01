@@ -17,7 +17,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [filterOption, setFilterOption] = useState(''); // State for the dropdown select
+  const [lineOption, setlineOption] = useState(''); // State for the dropdown select
 
 
   const style = {
@@ -62,7 +62,7 @@ function App() {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/wip/search?query=${searchQuery}&type=${searchType}`);
+      const response = await axios.get(`http://localhost:8081/search?query=${searchQuery}&type=${searchType}&line=${lineOption}`);
       setResults(response.data);
     } catch (error) {
       console.error("Error fetching search results", error);
@@ -83,7 +83,7 @@ function App() {
   const WIP = (value) =>{
     fetch('http://localhost:8081/wips')
     .then(res => res.json())
-    .then(data => {setData(data); setFilteredData(data);})
+    .then(data => {setData(data); setlineedData(data);})
     .catch(err => console.log(err))
   }
 
@@ -159,22 +159,23 @@ const BOM = (value) =>{
                 onChange={(e) => setSearchQuery(e.target.value)}
                 fullWidth
               />
+              WIP
               <FormControlLabel
                 control={<Switch checked={searchType === 'type2'} onChange={toggleSearchType} />}
                 label="TSN"
               />
               <FormControl fullWidth>
-                <InputLabel id="filter-select-label">Line</InputLabel>
+                <InputLabel id="line-select-label">Line</InputLabel>
                 <Select
-                  labelId="filter-select-label"
-                  id="filter-select"
-                  value={filterOption}
-                  label="Filter"
-                  onChange={(e) => setFilterOption(e.target.value)}
+                  labelId="line-select-label"
+                  id="line-select"
+                  value={lineOption}
+                  label="line"
+                  onChange={(e) => setlineOption(e.target.value)}
                 >
                   <MenuItem value=""><em>None</em></MenuItem>
-                  <MenuItem value="filter1">Alpha</MenuItem>
-                  <MenuItem value="filter2">Beta</MenuItem>
+                  <MenuItem value="line1">Alpha</MenuItem>
+                  <MenuItem value="line2">Beta</MenuItem>
                   {/* Add more options as needed */}
                 </Select>
               </FormControl>
