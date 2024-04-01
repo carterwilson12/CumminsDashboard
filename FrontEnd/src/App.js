@@ -1,18 +1,15 @@
 import './App.css';
-import { Stack, Switch, FormControlLabel, FormGroup, Input, InputLabel, FormControl, Button, ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import { MenuItem, Select, List, ListItem, ListItemText, TextField , Switch, FormControlLabel, FormGroup, Input, InputLabel, FormControl, Button, ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import React,{useState, useEffect} from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import axios from 'axios';
 
 function App() {
-  const [currWIP, handleWIPselect] = useState();
-  const [searchInput, setSearchInput] = useState('');
-  
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const [TSNdataID, setTSNdataID] = useState([]);
   const [TSN_REJdata, setTSN_REJdata] = useState([]);
   const [BOMdata, setBOMData] = useState([]);
@@ -20,6 +17,8 @@ function App() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [filterOption, setFilterOption] = useState(''); // State for the dropdown select
+
 
   const style = {
     position: 'absolute',
@@ -52,76 +51,43 @@ function App() {
       }
   };
 
-  const handleSearchInputChange = (event) => {
-    setSearchInput(event.target.value);
-    filterWIPs(event.target.value);
-  };
-
-
   //Handle WIP selector change
   const handleChange = (event, newWIP) => {
     handleWIPselect(newWIP)
   }
-
-  //
-  const filterWIPs = (input) => {
-    const filteredWIPs = data.filter((d) =>
-      d.WIP_JOB_NUMBER.toString().includes(input)
-    );
-    setFilteredData(filteredWIPs);
-  };
   
-  const AntSwitch = styled(Switch)(({ theme }) => ({
-    width: 28,
-    height: 16,
-    padding: 0,
-    display: 'flex',
-    '&:active': {
-      '& .MuiSwitch-thumb': {
-        width: 15,
-      },
-      '& .MuiSwitch-switchBase.Mui-checked': {
-        transform: 'translateX(9px)',
-      },
-    },
-    '& .MuiSwitch-switchBase': {
-      padding: 2,
-      '&.Mui-checked': {
-        transform: 'translateX(12px)',
-        color: '#fff',
-        '& + .MuiSwitch-track': {
-          opacity: 1,
-          backgroundColor: theme.palette.mode === 'green' ? '#177ddc' : '#1890ff',
-        },
-      },
-    },
-    '& .MuiSwitch-thumb': {
-      boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
-      width: 12,
-      height: 12,
-      borderRadius: 6,
-      transition: theme.transitions.create(['width'], {
-        duration: 200,
-      }),
-    },
-    '& .MuiSwitch-track': {
-      borderRadius: 16 / 2,
-      opacity: 1,
-      backgroundColor:
-        theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
-      boxSizing: 'border-box',
-    },
-  }));
-// data gathering from MES dummy data to WIP selector
-  useEffect(()=>{
+  const [searchQuery, setSearchQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [searchType, setSearchType] = useState('type1'); // Default search type
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8081/wip/search?query=${searchQuery}&type=${searchType}`);
+      setResults(response.data);
+    } catch (error) {
+      console.error("Error fetching search results", error);
+      setResults([]);
+    }
+  };
+
+  const toggleSearchType = () => {
+    setSearchType((prevType) => (prevType === 'type1' ? 'type2' : 'type1'));
+  };
+
+  const ResultsList = ({ results }) => {
+    if (results.length === 0) {
+      return <Typography variant="subtitle1">No results found.</Typography>;
+    }
+  }
+// data gathering from MES dummy data to WIP scope
+  const WIP = (value) =>{
     fetch('http://localhost:8081/wips')
     .then(res => res.json())
     .then(data => {setData(data); setFilteredData(data);})
     .catch(err => console.log(err))
-  },[])
+  }
 
-// data gathering from MES dummy data to WIP scope
-  const WIP = (value) =>{
+  const WIPS = (value) =>{
     fetch(`http://localhost:8081/wip/${value}`)
     .then(res => res.json())
     .then(WIPData => setWIPData(WIPData))
@@ -141,8 +107,9 @@ const tsn_rej_count = tsn_rej.length;
 
 const tsn_close = TSNdataID.filter(item => item.MES_SRNO_STATUS === '04');
 const tsn_close_count = tsn_close.length;
-const tsn_other = TSNdataID.filter(item => item.MES_SRNO_STATUS !== '04');
+const tsn_other = TSNdataID.filter(item => item.MES_SRNO_STATUS !== '04' || item.MES_SRNO_STATUS !== '03');
 const tsn_other_count = tsn_other.length;
+
 // data gathering from MES dummy data to TSN Compenent Rejected table
 const TSN_REJ = (value) =>{
   fetch(`http://localhost:8081/tsn_rej/${value}`)
@@ -184,37 +151,43 @@ const BOM = (value) =>{
                  
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}>
-          <div className="SearchBar">
-         <input
-          type="text"
-          placeholder='Search for a WIP'
-          id="searchinput"
-          name="searchinput"
-          value={searchInput}
-          onChange={handleSearchInputChange}
-        ></input>
-        
-        
-      </div> 
-          <div className='WIPSelectorLabel'>WIP Selector</div>
-            <div>
-              <ToggleButtonGroup 
-              exclusive
-              onChange={handleChange}
-              className="WIP-list" 
-              orientation="vertical" 
-              aria-label="Vertical button group" 
-              variant="contained"
-              >
-                {filteredData.map((d) =>(
-                  <ToggleButton style={{
-                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
-                    }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIP(d.WIP_JOB_NUMBER))}>
-                    {d.WIP_JOB_NUMBER} - QTY: {d.WIP_JOB_QTY}
-                  </ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-            </div>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <TextField
+                label="Search"
+                variant="outlined"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                fullWidth
+              />
+              <FormControlLabel
+                control={<Switch checked={searchType === 'type2'} onChange={toggleSearchType} />}
+                label="TSN"
+              />
+              <FormControl fullWidth>
+                <InputLabel id="filter-select-label">Line</InputLabel>
+                <Select
+                  labelId="filter-select-label"
+                  id="filter-select"
+                  value={filterOption}
+                  label="Filter"
+                  onChange={(e) => setFilterOption(e.target.value)}
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value="filter1">Alpha</MenuItem>
+                  <MenuItem value="filter2">Beta</MenuItem>
+                  {/* Add more options as needed */}
+                </Select>
+              </FormControl>
+              <Button variant="contained" onClick={handleSearch}>Search</Button>
+              <ResultsList results={results} />
+            </Box>
+            <List>
+              {results.map((result, index) => (
+                <ListItem key={index} divider>
+                  <ListItemText primary={result.WIP_JOB_NUMBER} /> {/* Adjust according to your data structure */}
+                </ListItem>
+              ))}
+            </List>
           </Grid>
           {/* WIP Status component goes inside this grid item*/}
           <Grid item xs={5}>
@@ -245,6 +218,13 @@ const BOM = (value) =>{
           <div className='WIPscope'>WIP Scope</div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
+              <TableHead>
+                <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model #</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type</TableCell>
+                  </TableRow>
+                  </TableHead>
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>

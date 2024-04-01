@@ -17,6 +17,24 @@ app.get('/', (re, res)=> {
     return res.json("response for GET request");
 })
 
+app.get('/wip/search', async (req, res) => {
+    const { query, type } = req.query;
+    let sqlQuery;
+    
+    if (type === 'type1') {
+      sqlQuery = 'SELECT * FROM mes_wip_info WHERE WIP_JOB_NUMBER = ?';
+    } else {
+      sqlQuery = 'SELECT * FROM mes_assy_job_info WHERE PRD_SERIAL_NUMBER = ?';
+    }
+  
+    try {
+      const results = await db.query(sqlQuery, [`%${query}%`]); // Assume db.query is a promisified query function
+      res.json(results);
+    } catch (error) {
+      res.status(500).send('Server error');
+    }
+  });
+
 app.get('/wips', (req, res)=> {
     const sql = "SELECT WIP_JOB_NUMBER, WIP_JOB_QTY FROM mes_wip_info";
     db.query(sql, (err, data)=> {
