@@ -17,6 +17,7 @@ function App() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lineOption, setlineOption] = useState(''); // State for the dropdown select
+  const [currWIP, handleWIPselect] = useState();
 
   const style = {
     position: 'absolute',
@@ -59,14 +60,17 @@ function App() {
   const [searchType, setSearchType] = useState('type1'); // Default search type
 
   const handleSearch = () => {
-    try {
-      fetch(`http://localhost:8081/search/${searchQuery}/${searchType}/${lineOption}`)
-      .then(res => res.json())
-      .then(results => {setResults(results)})
-      .catch(err => console.log(err))
-    } catch (error) {
-      console.error("Error fetching search results", error);
-    }
+
+    const queryParams = new URLSearchParams({
+      query: searchQuery,
+      type: searchType,
+      line: lineOption,
+    }).toString();
+  
+    fetch(`http://localhost:8081/search?${queryParams}`)
+    .then(res => res.json())
+    .then(results => setResults(results))
+    .catch(err => console.log(err))
   };
 
   const toggleSearchType = () => {
@@ -74,18 +78,15 @@ function App() {
   };
 
   const ResultsList = ({ results }) => {
+    console.log(results)
     if (results.length === 0) {
-      return <Typography variant="subtitle1">No results found.</Typography>;
+      return <Typography variant="subtitle1">No Results Found.</Typography>;
+    }
+    else if(results[0] === 'blank' && results.length === 1){
+      return <Typography variant="subtitle1">Insuffcient Search Criteria.</Typography>;
+
     }
   }
-// data gathering from MES dummy data to WIP scope
-  const WIP = (value) =>{
-    fetch('http://localhost:8081/wips')
-    .then(res => res.json())
-    .then(data => {setData(data); setlineedData(data);})
-    .catch(err => console.log(err))
-  }
-
   const WIPS = (value) =>{
     fetch(`http://localhost:8081/wip/${value}`)
     .then(res => res.json())
@@ -106,6 +107,7 @@ const tsn_rej_count = tsn_rej.length;
 
 const tsn_close = TSNdataID.filter(item => item.MES_SRNO_STATUS === '04');
 const tsn_close_count = tsn_close.length;
+
 const tsn_other = TSNdataID.filter(item => item.MES_SRNO_STATUS !== '04' || item.MES_SRNO_STATUS !== '03');
 const tsn_other_count = tsn_other.length;
 
@@ -158,7 +160,6 @@ const BOM = (value) =>{
                 onChange={(e) => setSearchQuery(e.target.value)}
                 fullWidth
               />
-              WIP
               <FormControlLabel
                 control={<Switch checked={searchType === 'type2'} onChange={toggleSearchType} />}
                 label="TSN"
@@ -173,20 +174,33 @@ const BOM = (value) =>{
                   onChange={(e) => setlineOption(e.target.value)}
                 >
                   <MenuItem value=""><em>None</em></MenuItem>
-                  <MenuItem value="line1">Alpha</MenuItem>
-                  <MenuItem value="line2">Beta</MenuItem>
+                  <MenuItem value="ALPHA LINE">Alpha</MenuItem>
+                  <MenuItem value="BETA LINE">Beta</MenuItem>
                 </Select>
               </FormControl>
               <Button variant="contained" onClick={handleSearch}>Search</Button>
+              <br/>
               <ResultsList results={results} />
             </Box>
-            <List>
-              {results.map((ress) => (
-                <ListItem key={ress.WIP_JOB_NUMBER} divider>
-                  <ListItemText primary={ress.WIP_JOB_NUMBER} /> {/* Adjust according to your data structure */}
-                </ListItem>
-              ))}
-            </List>
+            <div>
+              <ToggleButtonGroup 
+              exclusive
+              onChange={handleChange}
+              className="WIP-list" 
+              orientation="vertical" 
+              aria-label="Vertical button group" 
+              >
+                {results.map((d) =>(
+                  <ToggleButton style={{
+                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
+                    }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIPS(d.WIP_JOB_NUMBER))}>
+                    WIP: {d.WIP_JOB_NUMBER} <br/>QTY: {d.WIP_JOB_QTY}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+            </div>
+
+
           </Grid>
           {/* WIP Status component goes inside this grid item*/}
           <Grid item xs={5}>

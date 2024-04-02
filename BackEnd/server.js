@@ -17,40 +17,50 @@ app.get('/', (re, res)=> {
     return res.json("response for GET request");
 })
 
-app.get('/search/:query/:type/:line', (req, res) => {
-    const query = req.params.query;
-    const type = req.params.type;
-    const line = req.params.line;
+app.get('/search', (req, res) => {
+  const { query, type, line } = req.query;
 
-    console.log(req.params.line)
+  let sqlQuery = '';
+  let queryParams = [];
+  let conditions = [];
+  if (type === 'type1') {
+    sqlQuery = 'SELECT * FROM mes_wip_info WHERE ';
+    if (query) {
+        conditions.push('WIP_JOB_NUMBER LIKE ?');
+        queryParams.push(`%${query}%`);
+      }
+  } else {
+    sqlQuery = 'SELECT * FROM mes_assy_job_info WHERE ';
+    if (query) {
+        conditions.push('PRD_SERIAL_NUMBER LIKE ?');
+        queryParams.push(`%${query}%`);
+      }
+  }
 
-    let baseSqlQuery;
-    
+  if (line) {
+    conditions.push('ASSEMBLY_LINE = ?');
+    queryParams.push(line);
+  }
+
+  if (conditions.length === 0) {
     if (type === 'type1') {
-        baseSqlQuery = 'SELECT * FROM mes_wip_info WHERE WIP_JOB_NUMBER = ?';
-    } else {
-        baseSqlQuery = 'SELECT * FROM mes_assy_job_info WHERE PRD_SERIAL_NUMBER = ?';
-    }
+        sqlQuery = 'SELECT * FROM mes_wip_info';
+      } else {
+        sqlQuery = 'SELECT DISTINCT WIP_JOB_NUMBER FROM mes_assy_job_info';
 
-    // Add line to the SQL query if a line option is selected
-    let sqlQuery = baseSqlQuery;
-    let queryParams = [query];
-  
-    if (line && line.trim() !== '') {
-      sqlQuery += ' OR ASSEMBLY_LINE = ?';
-      queryParams.push(line);
-    }
+      }
+  }
 
-    db.query(sqlQuery, queryParams,
-    (err,result)=>{
+  sqlQuery += conditions.join(' AND ');
+
+    db.query(sqlQuery, queryParams,    
+        (err,result)=>{
         if(err) {
         console.log(err)
         } 
         res.send(result)
-        });   
-
-
-  });
+    });   
+});
 
 app.get('/wips', (req, res)=> {
     const sql = "SELECT WIP_JOB_NUMBER, WIP_JOB_QTY FROM mes_wip_info";
