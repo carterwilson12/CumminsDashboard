@@ -30,7 +30,7 @@ app.get('/search', (req, res) => {
         queryParams.push(`%${query}%`);
       }
   } else {
-    sqlQuery = 'SELECT * FROM mes_assy_job_info WHERE ';
+    sqlQuery = 'SELECT DISTINCT WIP_JOB_NUMBER FROM mes_assy_job_info WHERE ';
     if (query) {
         conditions.push('PRD_SERIAL_NUMBER LIKE ?');
         queryParams.push(`%${query}%`);

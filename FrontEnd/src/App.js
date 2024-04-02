@@ -213,9 +213,9 @@ const BOM = (value) =>{
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model #</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type</TableCell>
+                  <TableCell style={{backgroundColor: '#df1f1f' }} sx={{ fontWeight: 'bold', m: 1 }}>Rejected (03)</TableCell>
+                    <TableCell style={{backgroundColor: '#0ab919' }} sx={{ fontWeight: 'bold', m: 1 }}>Closed (04)</TableCell>
+                    <TableCell style={{backgroundColor: '#ebc90a' }} sx={{ fontWeight: 'bold', m: 1 }}>Open (other)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
