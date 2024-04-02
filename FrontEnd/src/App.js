@@ -1,16 +1,60 @@
 import './App.css';
-import { ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button} from '@mui/material';
+import { MenuItem, Select, List, ListItem, ListItemText, TextField , Switch, FormControlLabel, FormGroup, Input, InputLabel, FormControl, Button, ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import React,{useState, useEffect} from 'react';
-import { DataGrid } from '@mui/x-data-grid';  
+import { DataGrid } from '@mui/x-data-grid';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
 function App() {
-  const [currWIP, handleWIPselect] = React.useState();
-  const [searchInput, setSearchInput] = useState('');
-  
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const [TSNdataID, setTSNdataID] = useState([]);
+  const [TSN_REJdata, setTSN_REJdata] = useState([]);
   const [BOMdata, setBOMData] = useState([]);
   const [WIPData, setWIPData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [lineOption, setlineOption] = useState(''); 
+  const [dateOption, setdateOption] = useState(''); 
+  const [currWIP, handleWIPselect] = useState();
+  const [results, setResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState('');
+
+
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: "50%",
+    height: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const handleClassName = (params) => {
+    if(params.row.MES_SRNO_STATUS === "03")
+    {
+      return `status-${params.row.MES_SRNO_STATUS}`
+    }
+    else{
+      return "status-none"
+    }
+  };
+
+  const handleRowClick = (params) => {
+    if(params.row.MES_SRNO_STATUS === "03"){
+      handleOpen()
+      TSN_REJ(params.row.PRD_SERIAL_NUMBER)
+      console.log(params.row.PRD_SERIAL_NUMBER)
+      }
+  };
 
 
   const handleSearchInputChange = (event) => {
@@ -37,29 +81,37 @@ function App() {
   const handleChange = (event, newWIP) => {
     handleWIPselect(newWIP)
   }
-  const convertArrayOfObjectsToCSV = (data) => {
+    const convertArrayOfObjectsToCSV = (data) => {
     const csv = data.map(row => Object.values(row).join(','));
     return ['TSN, MES_SRNO_STATUS, VOC'].concat(csv).join('\n');
   };
-  //
-  const filterWIPs = (input) => {
-    const filteredWIPs = data.filter((d) =>
-      d.WIP_JOB_NUMBER.toString().includes(input)
-    );
-    setFilteredData(filteredWIPs);
-  };
+
+  const handleSearch = () => {
+
+    const queryParams = new URLSearchParams({
+      query: searchQuery,
+      type: searchType,
+      line: lineOption,
+      date: dateOption,
+
+    }).toString();
   
-
-// data gathering from MES dummy data to WIP selector
-  useEffect(()=>{
-    fetch('http://localhost:8081/wips')
+    fetch(`http://localhost:8081/search?${queryParams}`)
     .then(res => res.json())
-    .then(data => {setData(data); setFilteredData(data);})
+    .then(results => setResults(results))
     .catch(err => console.log(err))
-  },[])
+  };
 
-// data gathering from MES dummy data to WIP scope
-  const WIP = (value) =>{
+  const ResultsList = ({ results }) => {
+    console.log(results)
+    if (results.length === 0) {
+      return <Typography variant="subtitle1">No Results Found.</Typography>;
+    }
+    else if(results[0] === 'blank'){
+      return <Typography variant="subtitle1">Insuffcient Search Criteria.<br/>You must select a Query.</Typography>;
+    }
+  }
+  const WIPS = (value) =>{
     fetch(`http://localhost:8081/wip/${value}`)
     .then(res => res.json())
     .then(WIPData => setWIPData(WIPData))
@@ -72,6 +124,23 @@ function App() {
     .then(res => res.json())
     .then(TSNdataID => setTSNdataID(TSNdataID))
     .catch(err => console.log(err))
+}
+
+const tsn_rej = TSNdataID.filter(item => item.MES_SRNO_STATUS === '03');
+const tsn_rej_count = tsn_rej.length;
+
+const tsn_close = TSNdataID.filter(item => item.MES_SRNO_STATUS === '04');
+const tsn_close_count = tsn_close.length;
+
+const tsn_other = TSNdataID.filter(item => item.MES_SRNO_STATUS !== '04' && item.MES_SRNO_STATUS !== '03');
+const tsn_other_count = tsn_other.length;
+
+// data gathering from MES dummy data to TSN Compenent Rejected table
+const TSN_REJ = (value) =>{
+  fetch(`http://localhost:8081/tsn_rej/${value}`)
+  .then(res => res.json())
+  .then(TSN_REJdata => setTSN_REJdata(TSN_REJdata))
+  .catch(err => console.log(err))
 }
 
 // data gathering from MES dummy data to BOM table
@@ -105,19 +174,63 @@ const BOM = (value) =>{
                  
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}>
-          <div className="SearchBar">
-         <input
-          type="text"
-          placeholder='Search for a WIP'
-          id="searchinput"
-          name="searchinput"
-          value={searchInput}
-          onChange={handleSearchInputChange}
-        ></input>
-        
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <TextField
+                label="Search"
+                variant="outlined"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                fullWidth
+              />
+              <FormControl fullWidth>
+                <InputLabel id="query-type-select-label">Query</InputLabel>
+                <Select
+                  labelId="query-type-select-label"
+                  id="query-type-select"
+                  value={searchType}
+                  label="query-type"
+                  onChange={(e) => setSearchType(e.target.value)}
+                >
+                  <MenuItem value="wip">WIP</MenuItem>
+                  <MenuItem value="tsn">TSN</MenuItem>
+                  <MenuItem value="ID21">ID21</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="line-select-label">Line</InputLabel>
+                <Select
+                  labelId="line-select-label"
+                  id="line-select"
+                  value={lineOption}
+                  label="line"
+                  onChange={(e) => setlineOption(e.target.value)}
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value="ALPHA LINE">Alpha</MenuItem>
+                  <MenuItem value="BETA LINE">Beta</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="date-select-label">Since</InputLabel>
+                <Select
+                  labelId="date-select-label"
+                  id="date-select"
+                  value={dateOption}
+                  label="date"
+                  onChange={(e) => setdateOption(e.target.value)}
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value="24hrs">24 Hrs </MenuItem>
+                  <MenuItem value="7days">7 Days</MenuItem>
+                  <MenuItem value="15days">15 Days</MenuItem>
+                  <MenuItem value="30days">30 Days</MenuItem>
 
-      </div> 
-          <div className='WIPSelectorLabel'>WIP Selector</div>
+                </Select>
+              </FormControl>
+              <Button variant="contained" onClick={handleSearch}>Search</Button>
+              <br/>
+              <ResultsList results={results} />
+            </Box>
             <div>
               <ToggleButtonGroup 
               exclusive
@@ -125,17 +238,24 @@ const BOM = (value) =>{
               className="WIP-list" 
               orientation="vertical" 
               aria-label="Vertical button group" 
-              variant="contained"
               >
-                {filteredData.map((d) =>(
+                {results.map((d) =>(d === "blank" ? '' :
                   <ToggleButton style={{
-                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
-                    }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIP(d.WIP_JOB_NUMBER))}>
-                    WIP: {d.WIP_JOB_NUMBER} <br/>QTY: {d.WIP_JOB_QTY}
+                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : d.MES_SRNO_STATUS === "04" ? "green":"white", 
+                    color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
+                    }} 
+                    key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} 
+                    className="WIP-selector-button" 
+                    onLoad={e => TSN(d.WIP_JOB_NUMBER)}
+                    onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIPS(d.WIP_JOB_NUMBER))}
+                    >
+                    WIP: {d.WIP_JOB_NUMBER}  - ID21: {d.ID21_ITEM_NUMBER}<br/>QTY: {d.WIP_JOB_QTY}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
             </div>
+
+
           </Grid>
           <Grid item xs={5}>
           <div style={{height: 30}}></div>
@@ -144,16 +264,21 @@ const BOM = (value) =>{
               <Table sx={{ height: 100, minWidth: 200 }} aria-label="spanning table">
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{backgroundColor: '#df1f1f' }} sx={{ fontWeight: 'bold', m: 1 }}>Rejected (03)</TableCell>
+                    <TableCell align="center" colSpan={3}>
+                      WIP Scope
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                  <TableCell style={{backgroundColor: '#df1f1f' }} sx={{ fontWeight: 'bold', m: 1 }}>Rejected (03)</TableCell>
                     <TableCell style={{backgroundColor: '#0ab919' }} sx={{ fontWeight: 'bold', m: 1 }}>Closed (04)</TableCell>
                     <TableCell style={{backgroundColor: '#ebc90a' }} sx={{ fontWeight: 'bold', m: 1 }}>Open (other)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                     <TableRow>
-                      <TableCell>0</TableCell>
-                      <TableCell>17</TableCell>
-                      <TableCell>30</TableCell>
+                      <TableCell>{tsn_rej_count}</TableCell>
+                      <TableCell>{tsn_close_count}</TableCell>
+                      <TableCell>{tsn_other_count}</TableCell>
                     </TableRow>
                 </TableBody>
               </Table>
@@ -199,8 +324,45 @@ const BOM = (value) =>{
           <Button onClick={downloadCSV}>Download Excel file</Button>
             <div className='TSNTableLabel'>TSN Table</div>
             
-            <div style={{ height: 400, width: '100%' }} className="TSNtable">
+            <div style={{ height: 400, width: '100%' }}>
               <DataGrid
+                sx={{
+                  '& .status-03': {
+                    backgroundColor: "red",
+                    color: "white",
+                    transition: ".2s ease",
+                    '&:hover': {
+                      backgroundColor: "#8B0000",
+                      color: "white",
+                      cursor: "pointer"
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: "#8B0000",
+                      color: "white",
+                      cursor: "pointer",
+                      transition: ".2s ease",
+                      '&:hover': {
+                        backgroundColor: "#8B0000",
+                        color: "white",
+                      },
+                    },
+                  },
+                  '& .status-none': {
+                    backgroundColor: "white",
+                    transition: ".2s ease",
+                    '&:hover': {
+                      backgroundColor: "white",
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: "white",
+                      transition: ".2s ease",
+                      '&:hover': {
+                        backgroundColor: "white",
+                      },
+                    },
+                  },
+                }}
+                getRowClassName={handleClassName}
                 rows={TSNdataID.map((t) =>({ id: t.PRD_SERIAL_NUMBER, wip: t.WIP_JOB_NUMBER, id21: t.ID21_ITEM_NUMBER,
                   MES_SRNO_STATUS: t.MES_SRNO_STATUS, VOC_INSPECTION_STATUS: t.VOC_INSPECTION_STATUS}))}
                 columns={TSNcolumns}
@@ -210,7 +372,31 @@ const BOM = (value) =>{
                   }, 
                 }}
                 pageSizeOptions={[25, 50, 75, 100]}
+                onRowClick= {handleRowClick}
+                disableSelectionOnClick={true}
               />
+              
+              <div>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <DataGrid
+                      rows={TSN_REJdata.map((tr) =>({ id: tr.COMPONENT_ITEM_NUMBER, COMPONENT_DESCRIPTION: tr.COMPONENT_DESCRIPTION}))}
+                      columns={BOMcolumns}
+                      initialState={{
+                        pagination: {
+                          paginationModel: { page: 0, pageSize: 25 },
+                        },
+                      }}
+                      pageSizeOptions={[25, 50]}
+                    />
+                  </Box>
+                </Modal>
+              </div>
             </div>
            
             <div className='BOMTableLabel'>BOM Table</div>
