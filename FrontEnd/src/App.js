@@ -6,7 +6,6 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import axios from 'axios';
 
 function App() {
   const [data, setData] = useState([]);
@@ -18,7 +17,6 @@ function App() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [lineOption, setlineOption] = useState(''); // State for the dropdown select
-
 
   const style = {
     position: 'absolute',
@@ -60,13 +58,14 @@ function App() {
   const [results, setResults] = useState([]);
   const [searchType, setSearchType] = useState('type1'); // Default search type
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     try {
-      const response = await axios.get(`http://localhost:8081/search?query=${searchQuery}&type=${searchType}&line=${lineOption}`);
-      setResults(response.data);
+      fetch(`http://localhost:8081/search/${searchQuery}/${searchType}/${lineOption}`)
+      .then(res => res.json())
+      .then(results => {setResults(results)})
+      .catch(err => console.log(err))
     } catch (error) {
       console.error("Error fetching search results", error);
-      setResults([]);
     }
   };
 
@@ -176,16 +175,15 @@ const BOM = (value) =>{
                   <MenuItem value=""><em>None</em></MenuItem>
                   <MenuItem value="line1">Alpha</MenuItem>
                   <MenuItem value="line2">Beta</MenuItem>
-                  {/* Add more options as needed */}
                 </Select>
               </FormControl>
               <Button variant="contained" onClick={handleSearch}>Search</Button>
               <ResultsList results={results} />
             </Box>
             <List>
-              {results.map((result, index) => (
-                <ListItem key={index} divider>
-                  <ListItemText primary={result.WIP_JOB_NUMBER} /> {/* Adjust according to your data structure */}
+              {results.map((ress) => (
+                <ListItem key={ress.WIP_JOB_NUMBER} divider>
+                  <ListItemText primary={ress.WIP_JOB_NUMBER} /> {/* Adjust according to your data structure */}
                 </ListItem>
               ))}
             </List>

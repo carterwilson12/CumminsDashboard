@@ -17,10 +17,12 @@ app.get('/', (re, res)=> {
     return res.json("response for GET request");
 })
 
-app.get('/search', (req, res) => {
-    const query = req.query;
-    const type = req.type;
-    const line = req.line;
+app.get('/search/:query/:type/:line', (req, res) => {
+    const query = req.params.query;
+    const type = req.params.type;
+    const line = req.params.line;
+
+    console.log(req.params.line)
 
     let baseSqlQuery;
     
@@ -32,19 +34,22 @@ app.get('/search', (req, res) => {
 
     // Add line to the SQL query if a line option is selected
     let sqlQuery = baseSqlQuery;
-    let queryParams = [`%${query}%`];
+    let queryParams = [query];
   
     if (line && line.trim() !== '') {
-      sqlQuery += ' AND ASSEMBLY_LINE = ?';
+      sqlQuery += ' OR ASSEMBLY_LINE = ?';
       queryParams.push(line);
     }
 
-    try {
-      const results = db.query(sqlQuery, queryParams); // Assume db.query is a promisified query function
-      res.json(results);
-    } catch (error) {
-      res.status(500).send('Server error');
-    }
+    db.query(sqlQuery, queryParams,
+    (err,result)=>{
+        if(err) {
+        console.log(err)
+        } 
+        res.send(result)
+        });   
+
+
   });
 
 app.get('/wips', (req, res)=> {
