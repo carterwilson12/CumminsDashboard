@@ -56,11 +56,35 @@ function App() {
       }
   };
 
+
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+    filterWIPs(event.target.value);
+  };
+  
+  const downloadCSV = () => {
+    console.log(TSNdataID)
+    const TSNdata = TSNdataID.map((t) =>({ id: t.PRD_SERIAL_NUMBER, MES_SRNO_STATUS: t.MES_SRNO_STATUS, VOC_INSPECTION_STATUS: t.VOC_INSPECTION_STATUS}))
+      console.log(TSNdata)
+    const csvData = convertArrayOfObjectsToCSV(TSNdata);
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   //Handle WIP selector change
   const handleChange = (event, newWIP) => {
     handleWIPselect(newWIP)
   }
-  
+    const convertArrayOfObjectsToCSV = (data) => {
+    const csv = data.map(row => Object.values(row).join(','));
+    return ['TSN, MES_SRNO_STATUS, VOC'].concat(csv).join('\n');
+  };
 
   const handleSearch = () => {
 
@@ -140,13 +164,11 @@ const BOM = (value) =>{
     { field: 'COMPONENT_DESCRIPTION', headerName: 'Item Desc', flex: 0.5 },
   ];
 
-
   /* Set up of UI:
   Top left is where the Search Bar component lives
   Underneath is the WIP selector grid, that stretches to the bottom of the screen
-  Then placed in the middle is the WIP scope grid, leaving an empty space underneath
-  After that, there is the TSN table placed to the right side of screen
-  Lastly the BOM table is in a grid in the bottom right, under the TSN table */
+  Then placed in the middle is the Quantity Breadown Table & WIP Scope grid
+  And lastly the TSN Table & BOM Table grid to the right */
   return (
       <div className="App">
                  
@@ -235,10 +257,11 @@ const BOM = (value) =>{
 
 
           </Grid>
-          {/* WIP Status component goes inside this grid item*/}
           <Grid item xs={5}>
+          <div style={{height: 30}}></div>
+          <div className='QtyBreakdownTable'>Quantity Breakdown</div>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 200 }} aria-label="spanning table">
+              <Table sx={{ height: 100, minWidth: 200 }} aria-label="spanning table">
                 <TableHead>
                   <TableRow>
                     <TableCell align="center" colSpan={3}>
@@ -260,9 +283,10 @@ const BOM = (value) =>{
                 </TableBody>
               </Table>
             </TableContainer>
-          
+          <div style={{height: 295}}></div>
+          <div className='WIPscope'>WIP Scope</div>
             <TableContainer component={Paper}>
-            <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
+              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
@@ -297,6 +321,7 @@ const BOM = (value) =>{
 
 
           <Grid item xs={5}>
+          <Button onClick={downloadCSV}>Download Excel file</Button>
             <div className='TSNTableLabel'>TSN Table</div>
             
             <div style={{ height: 400, width: '100%' }}>
@@ -373,6 +398,7 @@ const BOM = (value) =>{
                 </Modal>
               </div>
             </div>
+           
             <div className='BOMTableLabel'>BOM Table</div>
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
