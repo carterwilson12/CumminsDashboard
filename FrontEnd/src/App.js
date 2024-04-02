@@ -16,8 +16,14 @@ function App() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [lineOption, setlineOption] = useState(''); // State for the dropdown select
+  const [lineOption, setlineOption] = useState(''); 
+  const [dateOption, setdateOption] = useState(''); 
   const [currWIP, handleWIPselect] = useState();
+  const [results, setResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState('');
+
+
 
   const style = {
     position: 'absolute',
@@ -55,9 +61,6 @@ function App() {
     handleWIPselect(newWIP)
   }
   
-  const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState([]);
-  const [searchType, setSearchType] = useState('type1'); // Default search type
 
   const handleSearch = () => {
 
@@ -65,6 +68,8 @@ function App() {
       query: searchQuery,
       type: searchType,
       line: lineOption,
+      date: dateOption,
+
     }).toString();
   
     fetch(`http://localhost:8081/search?${queryParams}`)
@@ -73,18 +78,13 @@ function App() {
     .catch(err => console.log(err))
   };
 
-  const toggleSearchType = () => {
-    setSearchType((prevType) => (prevType === 'type1' ? 'type2' : 'type1'));
-  };
-
   const ResultsList = ({ results }) => {
     console.log(results)
     if (results.length === 0) {
       return <Typography variant="subtitle1">No Results Found.</Typography>;
     }
-    else if(results[0] === 'blank' && results.length === 1){
-      return <Typography variant="subtitle1">Insuffcient Search Criteria.</Typography>;
-
+    else if(results[0] === 'blank'){
+      return <Typography variant="subtitle1">Insuffcient Search Criteria.<br/>You must select a Query.</Typography>;
     }
   }
   const WIPS = (value) =>{
@@ -108,7 +108,7 @@ const tsn_rej_count = tsn_rej.length;
 const tsn_close = TSNdataID.filter(item => item.MES_SRNO_STATUS === '04');
 const tsn_close_count = tsn_close.length;
 
-const tsn_other = TSNdataID.filter(item => item.MES_SRNO_STATUS !== '04' || item.MES_SRNO_STATUS !== '03');
+const tsn_other = TSNdataID.filter(item => item.MES_SRNO_STATUS !== '04' && item.MES_SRNO_STATUS !== '03');
 const tsn_other_count = tsn_other.length;
 
 // data gathering from MES dummy data to TSN Compenent Rejected table
@@ -160,10 +160,20 @@ const BOM = (value) =>{
                 onChange={(e) => setSearchQuery(e.target.value)}
                 fullWidth
               />
-              <FormControlLabel
-                control={<Switch checked={searchType === 'type2'} onChange={toggleSearchType} />}
-                label="TSN"
-              />
+              <FormControl fullWidth>
+                <InputLabel id="query-type-select-label">Query</InputLabel>
+                <Select
+                  labelId="query-type-select-label"
+                  id="query-type-select"
+                  value={searchType}
+                  label="query-type"
+                  onChange={(e) => setSearchType(e.target.value)}
+                >
+                  <MenuItem value="wip">WIP</MenuItem>
+                  <MenuItem value="tsn">TSN</MenuItem>
+                  <MenuItem value="ID21">ID21</MenuItem>
+                </Select>
+              </FormControl>
               <FormControl fullWidth>
                 <InputLabel id="line-select-label">Line</InputLabel>
                 <Select
@@ -178,6 +188,23 @@ const BOM = (value) =>{
                   <MenuItem value="BETA LINE">Beta</MenuItem>
                 </Select>
               </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="date-select-label">Since</InputLabel>
+                <Select
+                  labelId="date-select-label"
+                  id="date-select"
+                  value={dateOption}
+                  label="date"
+                  onChange={(e) => setdateOption(e.target.value)}
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value="24hrs">24 Hrs </MenuItem>
+                  <MenuItem value="7days">7 Days</MenuItem>
+                  <MenuItem value="15days">15 Days</MenuItem>
+                  <MenuItem value="30days">30 Days</MenuItem>
+
+                </Select>
+              </FormControl>
               <Button variant="contained" onClick={handleSearch}>Search</Button>
               <br/>
               <ResultsList results={results} />
@@ -190,11 +217,17 @@ const BOM = (value) =>{
               orientation="vertical" 
               aria-label="Vertical button group" 
               >
-                {results.map((d) =>(
+                {results.map((d) =>(d === "blank" ? '' :
                   <ToggleButton style={{
-                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : undefined,color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
-                    }} key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} className="WIP-selector-button" onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIPS(d.WIP_JOB_NUMBER))}>
-                    WIP: {d.WIP_JOB_NUMBER} <br/>QTY: {d.WIP_JOB_QTY}
+                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : d.MES_SRNO_STATUS === "04" ? "green":"white", 
+                    color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
+                    }} 
+                    key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} 
+                    className="WIP-selector-button" 
+                    onLoad={e => TSN(d.WIP_JOB_NUMBER)}
+                    onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIPS(d.WIP_JOB_NUMBER))}
+                    >
+                    WIP: {d.WIP_JOB_NUMBER}  - ID21: {d.ID21_ITEM_NUMBER}<br/>QTY: {d.WIP_JOB_QTY}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
@@ -228,58 +261,35 @@ const BOM = (value) =>{
               </Table>
             </TableContainer>
           
-          <div className='WIPscope'>WIP Scope</div>
             <TableContainer component={Paper}>
-              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
-              <TableHead>
-                <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Model #</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>ID21</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>WIP Type</TableCell>
-                  </TableRow>
-                  </TableHead>
+            <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
-                      <TableCell>{b.MODEL_NUMBER}</TableCell>
-                      <TableCell>{b.ID21_ITEM_NUMBER}</TableCell>
-                      <TableCell>{b.WIP_TYPE}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Model #</span> <br/> {b.MODEL_NUMBER}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>ID21</span> <br/>{b.ID21_ITEM_NUMBER}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>WIP Type</span><br/>{b.WIP_TYPE}</TableCell>
                     </TableRow>
                     ))}
                 </TableBody>
                 <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Turbo Type</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Assembly Line</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Customer</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
-                      <TableCell>{b.TURBO_TYPE}</TableCell>
-                      <TableCell>{b.ASSEMBLY_LINE}</TableCell>
-                      <TableCell>{b.CUSTOMER_SHORT_NAME}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Turbo Type</span><br/>{b.TURBO_TYPE}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Assembly Line</span><br/>{b.ASSEMBLY_LINE}</TableCell>
+                      <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Customer</span><br/>{b.CUSTOMER_SHORT_NAME}</TableCell>
                     </TableRow>
                     ))}
-                </TableBody>
+                </TableHead>
                 <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>SCH Ship</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Job Start</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', m: 1 }}>Last Update</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
                 {WIPData.map((b) =>(
-                    <TableRow>
-                      <TableCell>{b.SCH_SHIP_DATE}</TableCell>
-                      <TableCell>{b.JOB_START_DATE}</TableCell>
-                      <TableCell>{b.LAST_UPDATE_DATE}</TableCell>
-                    </TableRow>
-                    ))}
-
-                </TableBody>
+                  <TableRow>
+                    <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>SCH Ship</span> <br/>{b.SCH_SHIP_DATE}</TableCell>
+                    <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Job Start</span><br/>{b.JOB_START_DATE}</TableCell>
+                    <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Last Update</span><br/>{b.LAST_UPDATE_DATE}</TableCell>
+                  </TableRow>
+                  ))}
+                </TableHead>
               </Table>
             </TableContainer>
           </Grid>
