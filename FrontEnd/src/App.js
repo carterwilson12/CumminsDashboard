@@ -57,10 +57,10 @@ function App() {
   };
 
 
-  const handleSearchInputChange = (event) => {
-    setSearchInput(event.target.value);
-    filterWIPs(event.target.value);
-  };
+  // const handleSearchInputChange = (event) => {
+  //   setSearchInput(event.target.value);
+  //   filterWIPs(event.target.value);
+  // };
   
   const downloadCSV = () => {
     console.log(TSNdataID)
@@ -171,7 +171,6 @@ const BOM = (value) =>{
   And lastly the TSN Table & BOM Table grid to the right */
   return (
       <div className="App">
-                 
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -180,8 +179,7 @@ const BOM = (value) =>{
                 variant="outlined"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                fullWidth
-              />
+                fullWidth />
               <FormControl fullWidth>
                 <InputLabel id="query-type-select-label">Query</InputLabel>
                 <Select
@@ -189,8 +187,7 @@ const BOM = (value) =>{
                   id="query-type-select"
                   value={searchType}
                   label="query-type"
-                  onChange={(e) => setSearchType(e.target.value)}
-                >
+                  onChange={(e) => setSearchType(e.target.value)}>
                   <MenuItem value="wip">WIP</MenuItem>
                   <MenuItem value="tsn">TSN</MenuItem>
                   <MenuItem value="ID21">ID21</MenuItem>
@@ -203,8 +200,7 @@ const BOM = (value) =>{
                   id="line-select"
                   value={lineOption}
                   label="line"
-                  onChange={(e) => setlineOption(e.target.value)}
-                >
+                  onChange={(e) => setlineOption(e.target.value)}>
                   <MenuItem value=""><em>None</em></MenuItem>
                   <MenuItem value="ALPHA LINE">Alpha</MenuItem>
                   <MenuItem value="BETA LINE">Beta</MenuItem>
@@ -217,14 +213,12 @@ const BOM = (value) =>{
                   id="date-select"
                   value={dateOption}
                   label="date"
-                  onChange={(e) => setdateOption(e.target.value)}
-                >
+                  onChange={(e) => setdateOption(e.target.value)}>
                   <MenuItem value=""><em>None</em></MenuItem>
                   <MenuItem value="24hrs">24 Hrs </MenuItem>
                   <MenuItem value="7days">7 Days</MenuItem>
                   <MenuItem value="15days">15 Days</MenuItem>
                   <MenuItem value="30days">30 Days</MenuItem>
-
                 </Select>
               </FormControl>
               <Button variant="contained" onClick={handleSearch}>Search</Button>
@@ -237,8 +231,7 @@ const BOM = (value) =>{
               onChange={handleChange}
               className="WIP-list" 
               orientation="vertical" 
-              aria-label="Vertical button group" 
-              >
+              aria-label="Vertical button group">
                 {results.map((d) =>(d === "blank" ? '' :
                   <ToggleButton style={{
                     backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : d.MES_SRNO_STATUS === "04" ? "green":"white", 
@@ -254,18 +247,15 @@ const BOM = (value) =>{
                 ))}
               </ToggleButtonGroup>
             </div>
-
-
           </Grid>
           <Grid item xs={5}>
-          <div style={{height: 30}}></div>
-          <div className='QtyBreakdownTable'>Quantity Breakdown</div>
+          <div style={{height: 40}}></div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 100, minWidth: 200 }} aria-label="spanning table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center" colSpan={3}>
-                      WIP Scope
+                    <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                    Quantity Breakdown
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -283,10 +273,9 @@ const BOM = (value) =>{
                 </TableBody>
               </Table>
             </TableContainer>
-          <div style={{height: 295}}></div>
-          <div className='WIPscope'>WIP Scope</div>
+          <div style={{height: 245}}></div>
             <TableContainer component={Paper}>
-              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
+              <Table sx={{ height: 415, minWidth: 200 }} aria-label="spanning table">
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
@@ -297,6 +286,11 @@ const BOM = (value) =>{
                     ))}
                 </TableBody>
                 <TableHead>
+                  <TableRow>
+                    <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                      WIP Scope
+                    </TableCell>
+                  </TableRow>
                 {WIPData.map((b) =>(
                     <TableRow>
                       <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Turbo Type</span><br/>{b.TURBO_TYPE}</TableCell>
@@ -317,14 +311,14 @@ const BOM = (value) =>{
               </Table>
             </TableContainer>
           </Grid>
-
-
-
           <Grid item xs={5}>
           <Button onClick={downloadCSV}>Download Excel file</Button>
-            <div className='TSNTableLabel'>TSN Table</div>
-            
-            <div style={{ height: 400, width: '100%' }}>
+            <TableContainer component={Paper}>
+              <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                TSN Table
+              </TableCell>
+            </TableContainer>
+            <div style={{ height: 355, width: '100%' }}>
               <DataGrid
                 sx={{
                   '& .status-03': {
@@ -375,7 +369,6 @@ const BOM = (value) =>{
                 onRowClick= {handleRowClick}
                 disableSelectionOnClick={true}
               />
-              
               <div>
                 <Modal
                   open={open}
@@ -398,9 +391,12 @@ const BOM = (value) =>{
                 </Modal>
               </div>
             </div>
-           
-            <div className='BOMTableLabel'>BOM Table</div>
-            <div style={{ height: 400, width: '100%' }}>
+            <TableContainer component={Paper}>
+              <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                BOM Table
+              </TableCell>
+            </TableContainer>
+            <div style={{ height: 355, width: '100%' }}>
               <DataGrid
                 rows={BOMdata.map((b) =>({ id: b.COMPONENT_ITEM_NUMBER, COMPONENT_DESCRIPTION: b.COMPONENT_DESCRIPTION}))}
                 columns={BOMcolumns}
