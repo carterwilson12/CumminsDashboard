@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import DownloadIcon from '@mui/icons-material/Download';
 
 function App() {
   const [data, setData] = useState([]);
@@ -85,7 +86,7 @@ function App() {
     const csv = data.map(row => Object.values(row).join(','));
     return ['TSN, MES_SRNO_STATUS, VOC'].concat(csv).join('\n');
   };
-
+  
   const handleSearch = () => {
 
     const queryParams = new URLSearchParams({
@@ -259,16 +260,16 @@ const BOM = (value) =>{
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                  <TableCell style={{backgroundColor: '#df1f1f' }} sx={{ fontWeight: 'bold', m: 1 }}>Rejected (03)</TableCell>
-                    <TableCell style={{backgroundColor: '#0ab919' }} sx={{ fontWeight: 'bold', m: 1 }}>Closed (04)</TableCell>
-                    <TableCell style={{backgroundColor: '#ebc90a' }} sx={{ fontWeight: 'bold', m: 1 }}>Open (other)</TableCell>
+                  <TableCell style={{backgroundColor: '#df1f1f', height: '5px'}} sx={{ fontWeight: 'bold', m: 1 }}></TableCell>
+                    <TableCell style={{backgroundColor: '#0ab919', height: '5px' }} sx={{ fontWeight: 'bold', m: 1 }}></TableCell>
+                    <TableCell style={{backgroundColor: '#ebc90a', height: '5px' }} sx={{ fontWeight: 'bold', m: 1 }}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                     <TableRow>
-                      <TableCell>{tsn_rej_count}</TableCell>
-                      <TableCell>{tsn_close_count}</TableCell>
-                      <TableCell>{tsn_other_count}</TableCell>
+                      <TableCell><b>Rejected (03)</b> <br></br>{tsn_rej_count}</TableCell>
+                      <TableCell><b>Closed (04)</b><br></br>{tsn_close_count}</TableCell>
+                      <TableCell><b>Open (other)</b><br></br>{tsn_other_count}</TableCell>
                     </TableRow>
                 </TableBody>
               </Table>
@@ -312,7 +313,7 @@ const BOM = (value) =>{
             </TableContainer>
           </Grid>
           <Grid item xs={5}>
-          <Button onClick={downloadCSV}>Download Excel file</Button>
+          <Button variant='contained'onClick={downloadCSV} endIcon={<DownloadIcon />}>Download Excel file</Button>
             <TableContainer component={Paper}>
               <TableCell align="left" colSpan={3} style={{fontSize:20}}>
                 TSN Table
