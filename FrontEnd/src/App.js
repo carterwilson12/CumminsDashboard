@@ -227,15 +227,17 @@ const BOM = (value) =>{
               <ResultsList results={results} />
             </Box>
             <div>
+              {console.log(results)}
               <ToggleButtonGroup 
               exclusive
               onChange={handleChange}
               className="WIP-list" 
               orientation="vertical" 
               aria-label="Vertical button group">
-                {results.map((d) =>(d === "blank" ? '' :
+                {results.map((d) =>(
+                  d === "blank" ? '' :
                   <ToggleButton style={{
-                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : d.MES_SRNO_STATUS === "04" ? "green":"white", 
+                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : d.WIP_JOB_QTY === tsn_close_count ? "#3e781d":"white", 
                     color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
                     }} 
                     key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} 
@@ -243,7 +245,7 @@ const BOM = (value) =>{
                     onLoad={e => TSN(d.WIP_JOB_NUMBER)}
                     onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIPS(d.WIP_JOB_NUMBER))}
                     >
-                    WIP: {d.WIP_JOB_NUMBER}  - ID21: {d.ID21_ITEM_NUMBER}<br/>QTY: {d.WIP_JOB_QTY}
+                    WIP: {d.WIP_JOB_NUMBER} <br/>ID21: {d.ID21_ITEM_NUMBER}<br/>QTY: {d.WIP_JOB_QTY}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>

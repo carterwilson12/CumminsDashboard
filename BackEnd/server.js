@@ -75,7 +75,7 @@ app.get('/search', (req, res) => {
     if (dateCondition) conditions.push(dateCondition);
   }
 
-  if (type !== '') {
+  if (type === '') {
     if (type === 'wip' || type === 'ID21') {
         sqlQuery = 'SELECT * FROM mes_wip_info';
       } else if(type === 'tsn') {
