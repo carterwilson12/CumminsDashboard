@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import DownloadIcon from '@mui/icons-material/Download';
 
 function App() {
   const [data, setData] = useState([]);
@@ -258,35 +259,40 @@ const BOM = (value) =>{
 
           </Grid>
           <Grid item xs={5}>
-          <div style={{height: 30}}></div>
-          <div className='QtyBreakdownTable'>Quantity Breakdown</div>
-            <TableContainer component={Paper}>
+          <div style={{height: 40}}></div>
+          <TableContainer component={Paper}>
               <Table sx={{ height: 100, minWidth: 200 }} aria-label="spanning table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center" colSpan={3}>
-                      WIP Scope
+                    <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                    Quantity Breakdown
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                  <TableCell style={{backgroundColor: '#df1f1f' }} sx={{ fontWeight: 'bold', m: 1 }}>Rejected (03)</TableCell>
-                    <TableCell style={{backgroundColor: '#0ab919' }} sx={{ fontWeight: 'bold', m: 1 }}>Closed (04)</TableCell>
-                    <TableCell style={{backgroundColor: '#ebc90a' }} sx={{ fontWeight: 'bold', m: 1 }}>Open (other)</TableCell>
+                  <TableCell style={{backgroundColor: '#df1f1f', height: '5px'}} sx={{ fontWeight: 'bold', m: 1 }}></TableCell>
+                    <TableCell style={{backgroundColor: '#0ab919', height: '5px' }} sx={{ fontWeight: 'bold', m: 1 }}></TableCell>
+                    <TableCell style={{backgroundColor: '#ebc90a', height: '5px' }} sx={{ fontWeight: 'bold', m: 1 }}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                     <TableRow>
-                      <TableCell>{tsn_rej_count}</TableCell>
-                      <TableCell>{tsn_close_count}</TableCell>
-                      <TableCell>{tsn_other_count}</TableCell>
+                      <TableCell><b>Rejected (03)</b> <br></br>{tsn_rej_count}</TableCell>
+                      <TableCell><b>Closed (04)</b><br></br>{tsn_close_count}</TableCell>
+                      <TableCell><b>Open (other)</b><br></br>{tsn_other_count}</TableCell>
                     </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
-          <div style={{height: 295}}></div>
-          <div className='WIPscope'>WIP Scope</div>
+            <div style={{height: 245}}></div>
             <TableContainer component={Paper}>
-              <Table sx={{ height: 400, minWidth: 200 }} aria-label="spanning table">
+              <Table sx={{ height: 415, minWidth: 200 }} aria-label="spanning table">
+              <TableHead>
+                  <TableRow>
+                    <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                      WIP Scope
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
@@ -295,8 +301,6 @@ const BOM = (value) =>{
                       <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>WIP Type</span><br/>{b.WIP_TYPE}</TableCell>
                     </TableRow>
                     ))}
-                </TableBody>
-                <TableHead>
                 {WIPData.map((b) =>(
                     <TableRow>
                       <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Turbo Type</span><br/>{b.TURBO_TYPE}</TableCell>
@@ -304,8 +308,6 @@ const BOM = (value) =>{
                       <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Customer</span><br/>{b.CUSTOMER_SHORT_NAME}</TableCell>
                     </TableRow>
                     ))}
-                </TableHead>
-                <TableHead>
                 {WIPData.map((b) =>(
                   <TableRow>
                     <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>SCH Ship</span> <br/>{b.SCH_SHIP_DATE}</TableCell>
@@ -313,18 +315,18 @@ const BOM = (value) =>{
                     <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Last Update</span><br/>{b.LAST_UPDATE_DATE}</TableCell>
                   </TableRow>
                   ))}
-                </TableHead>
+                </TableBody>
               </Table>
             </TableContainer>
           </Grid>
-
-
-
           <Grid item xs={5}>
-          <Button onClick={downloadCSV}>Download Excel file</Button>
-            <div className='TSNTableLabel'>TSN Table</div>
-            
-            <div style={{ height: 400, width: '100%' }}>
+          <Button variant='contained'onClick={downloadCSV} endIcon={<DownloadIcon />}>Download Excel file</Button>
+          <TableContainer component={Paper}>
+              <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                TSN Table
+              </TableCell>
+            </TableContainer>
+            <div style={{ height: 355, width: '100%' }}>
               <DataGrid
                 sx={{
                   '& .status-03': {
@@ -399,8 +401,12 @@ const BOM = (value) =>{
               </div>
             </div>
            
-            <div className='BOMTableLabel'>BOM Table</div>
-            <div style={{ height: 400, width: '100%' }}>
+            <TableContainer component={Paper}>
+              <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                BOM Table
+              </TableCell>
+            </TableContainer>
+            <div style={{ height: 355, width: '100%' }}>
               <DataGrid
                 rows={BOMdata.map((b) =>({ id: b.COMPONENT_ITEM_NUMBER, COMPONENT_DESCRIPTION: b.COMPONENT_DESCRIPTION}))}
                 columns={BOMcolumns}
