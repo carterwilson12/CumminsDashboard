@@ -318,11 +318,14 @@ const BOM = (value) =>{
             </TableContainer>
           </Grid>
           <Grid item xs={5}>
-          <Button variant='contained'onClick={downloadCSV} endIcon={<DownloadIcon />}>Download Excel file</Button>
+          
           <TableContainer component={Paper}>
-              <TableCell align="left" colSpan={3} style={{fontSize:20}}>
-                TSN Table
-              </TableCell>
+          <TableCell style={{fontSize: 20, display: 'flex', justifyContent: 'space-between'}}>
+            <span style={{alignSelf: 'center'}}>TSN Table</span>
+            <Button variant='contained' onClick={downloadCSV} endIcon={<DownloadIcon />}>
+              Download Excel file
+            </Button>
+</TableCell>
             </TableContainer>
             <div style={{ height: 355, width: '100%' }}>
               <DataGrid
