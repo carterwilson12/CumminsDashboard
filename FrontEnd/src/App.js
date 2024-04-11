@@ -56,10 +56,10 @@ function App() {
   };
 
 
-  const handleSearchInputChange = (event) => {
-    setSearchInput(event.target.value);
-    filterWIPs(event.target.value);
-  };
+  // const handleSearchInputChange = (event) => {
+  //   setSearchInput(event.target.value);
+  //   filterWIPs(event.target.value);
+  // };
   
   const downloadCSV = () => {
     console.log(TSNdataID)
@@ -84,7 +84,7 @@ function App() {
     const csv = data.map(row => Object.values(row).join(','));
     return ['TSN, MES_SRNO_STATUS, VOC'].concat(csv).join('\n');
   };
-
+  
   const handleSearch = () => {
 
     const queryParams = new URLSearchParams({
@@ -170,7 +170,6 @@ const BOM = (value) =>{
   And lastly the TSN Table & BOM Table grid to the right */
   return (
       <div className="App">
-                 
         <Grid container direction="row" justifyContent="flex-start"spacing={2}>
           <Grid item xs={2}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -179,8 +178,7 @@ const BOM = (value) =>{
                 variant="outlined"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                fullWidth
-              />
+                fullWidth />
               <FormControl fullWidth>
                 <InputLabel id="query-type-select-label">Query</InputLabel>
                 <Select
@@ -188,8 +186,7 @@ const BOM = (value) =>{
                   id="query-type-select"
                   value={searchType}
                   label="query-type"
-                  onChange={(e) => setSearchType(e.target.value)}
-                >
+                  onChange={(e) => setSearchType(e.target.value)}>
                   <MenuItem value="wip">WIP</MenuItem>
                   <MenuItem value="tsn">TSN</MenuItem>
                   <MenuItem value="ID21">ID21</MenuItem>
@@ -202,8 +199,7 @@ const BOM = (value) =>{
                   id="line-select"
                   value={lineOption}
                   label="line"
-                  onChange={(e) => setlineOption(e.target.value)}
-                >
+                  onChange={(e) => setlineOption(e.target.value)}>
                   <MenuItem value=""><em>None</em></MenuItem>
                   <MenuItem value="ALPHA LINE">Alpha</MenuItem>
                   <MenuItem value="BETA LINE">Beta</MenuItem>
@@ -216,14 +212,12 @@ const BOM = (value) =>{
                   id="date-select"
                   value={dateOption}
                   label="date"
-                  onChange={(e) => setdateOption(e.target.value)}
-                >
+                  onChange={(e) => setdateOption(e.target.value)}>
                   <MenuItem value=""><em>None</em></MenuItem>
                   <MenuItem value="24hrs">24 Hrs </MenuItem>
                   <MenuItem value="7days">7 Days</MenuItem>
                   <MenuItem value="15days">15 Days</MenuItem>
                   <MenuItem value="30days">30 Days</MenuItem>
-
                 </Select>
               </FormControl>
               <Button variant="contained" onClick={handleSearch}>Search</Button>
@@ -231,16 +225,17 @@ const BOM = (value) =>{
               <ResultsList results={results} />
             </Box>
             <div>
+              {console.log(results)}
               <ToggleButtonGroup 
               exclusive
               onChange={handleChange}
               className="WIP-list" 
               orientation="vertical" 
-              aria-label="Vertical button group" 
-              >
-                {results.map((d) =>(d === "blank" ? '' :
+              aria-label="Vertical button group">
+                {results.map((d) =>(
+                  d === "blank" ? '' :
                   <ToggleButton style={{
-                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : d.MES_SRNO_STATUS === "04" ? "green":"white", 
+                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : d.WIP_JOB_QTY === tsn_close_count ? "#3e781d":"white", 
                     color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
                     }} 
                     key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} 
@@ -248,17 +243,15 @@ const BOM = (value) =>{
                     onLoad={e => TSN(d.WIP_JOB_NUMBER)}
                     onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIPS(d.WIP_JOB_NUMBER))}
                     >
-                    WIP: {d.WIP_JOB_NUMBER}  - ID21: {d.ID21_ITEM_NUMBER}<br/>QTY: {d.WIP_JOB_QTY}
+                    WIP: {d.WIP_JOB_NUMBER} <br/>ID21: {d.ID21_ITEM_NUMBER}<br/>QTY: {d.WIP_JOB_QTY}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
             </div>
-
-
           </Grid>
           <Grid item xs={5}>
           <div style={{height: 40}}></div>
-          <TableContainer component={Paper}>
+            <TableContainer component={Paper}>
               <Table sx={{ height: 100, minWidth: 200 }} aria-label="spanning table">
                 <TableHead>
                   <TableRow>
@@ -319,13 +312,14 @@ const BOM = (value) =>{
           </Grid>
           <Grid item xs={5}>
           
+          
           <TableContainer component={Paper}>
           <TableCell style={{fontSize: 20, display: 'flex', justifyContent: 'space-between'}}>
             <span style={{alignSelf: 'center'}}>TSN Table</span>
             <Button variant='contained' onClick={downloadCSV} endIcon={<DownloadIcon />}>
               Download Excel file
             </Button>
-</TableCell>
+          </TableCell>
             </TableContainer>
             <div style={{ height: 355, width: '100%' }}>
               <DataGrid
@@ -378,7 +372,6 @@ const BOM = (value) =>{
                 onRowClick= {handleRowClick}
                 disableSelectionOnClick={true}
               />
-              
               <div>
                 <Modal
                   open={open}
