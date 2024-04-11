@@ -2,14 +2,12 @@ import './App.css';
 import { MenuItem, Select, List, ListItem, ListItemText, TextField , Switch, FormControlLabel, FormGroup, Input, InputLabel, FormControl, Button, ToggleButtonGroup, ToggleButton, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import React,{useState, useEffect} from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import DownloadIcon from '@mui/icons-material/Download';
 
 function App() {
-  const [data, setData] = useState([]);
   const [TSNdataID, setTSNdataID] = useState([]);
   const [TSN_REJdata, setTSN_REJdata] = useState([]);
   const [BOMdata, setBOMData] = useState([]);
@@ -276,9 +274,16 @@ const BOM = (value) =>{
                 </TableBody>
               </Table>
             </TableContainer>
-          <div style={{height: 245}}></div>
+            <div style={{height: 245}}></div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 415, minWidth: 200 }} aria-label="spanning table">
+              <TableHead>
+                  <TableRow>
+                    <TableCell align="left" colSpan={3} style={{fontSize:20}}>
+                      WIP Scope
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
                 <TableBody>
                 {WIPData.map((b) =>(
                     <TableRow>
@@ -287,13 +292,6 @@ const BOM = (value) =>{
                       <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>WIP Type</span><br/>{b.WIP_TYPE}</TableCell>
                     </TableRow>
                     ))}
-                </TableBody>
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left" colSpan={3} style={{fontSize:20}}>
-                      WIP Scope
-                    </TableCell>
-                  </TableRow>
                 {WIPData.map((b) =>(
                     <TableRow>
                       <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Turbo Type</span><br/>{b.TURBO_TYPE}</TableCell>
@@ -301,8 +299,6 @@ const BOM = (value) =>{
                       <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Customer</span><br/>{b.CUSTOMER_SHORT_NAME}</TableCell>
                     </TableRow>
                     ))}
-                </TableHead>
-                <TableHead>
                 {WIPData.map((b) =>(
                   <TableRow>
                     <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>SCH Ship</span> <br/>{b.SCH_SHIP_DATE}</TableCell>
@@ -310,16 +306,20 @@ const BOM = (value) =>{
                     <TableCell><span style={{ fontWeight: 'bold', m: 1 }}>Last Update</span><br/>{b.LAST_UPDATE_DATE}</TableCell>
                   </TableRow>
                   ))}
-                </TableHead>
+                </TableBody>
               </Table>
             </TableContainer>
           </Grid>
           <Grid item xs={5}>
-          <Button variant='contained'onClick={downloadCSV} endIcon={<DownloadIcon />}>Download Excel file</Button>
-            <TableContainer component={Paper}>
-              <TableCell align="left" colSpan={3} style={{fontSize:20}}>
-                TSN Table
-              </TableCell>
+          
+          
+          <TableContainer component={Paper}>
+          <TableCell style={{fontSize: 20, display: 'flex', justifyContent: 'space-between'}}>
+            <span style={{alignSelf: 'center'}}>TSN Table</span>
+            <Button variant='contained' onClick={downloadCSV} endIcon={<DownloadIcon />}>
+              Download Excel file
+            </Button>
+          </TableCell>
             </TableContainer>
             <div style={{ height: 355, width: '100%' }}>
               <DataGrid
@@ -394,6 +394,7 @@ const BOM = (value) =>{
                 </Modal>
               </div>
             </div>
+           
             <TableContainer component={Paper}>
               <TableCell align="left" colSpan={3} style={{fontSize:20}}>
                 BOM Table
@@ -418,3 +419,4 @@ const BOM = (value) =>{
 }
 
 export default App;
+
