@@ -235,7 +235,7 @@ const BOM = (value) =>{
                 {results.map((d) =>(
                   d === "blank" ? '' :
                   <ToggleButton style={{
-                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e' : d.WIP_JOB_QTY === tsn_close_count ? "#3e781d":"white", 
+                    backgroundColor: currWIP === d.WIP_JOB_NUMBER ? '#2c387e':"white", 
                     color: currWIP === d.WIP_JOB_NUMBER ? 'white' : undefined
                     }} 
                     key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} 
