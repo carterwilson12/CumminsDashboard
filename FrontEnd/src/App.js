@@ -240,8 +240,7 @@ const BOM = (value) =>{
                     }} 
                     key={d.WIP_JOB_NUMBER} value={d.WIP_JOB_NUMBER} 
                     className="WIP-selector-button" 
-                    onLoad={e => TSN(d.WIP_JOB_NUMBER)}
-                    onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER),WIPS(d.WIP_JOB_NUMBER))}
+                    onClick={e => TSN(d.WIP_JOB_NUMBER, BOM(d.WIP_JOB_NUMBER), WIPS(d.WIP_JOB_NUMBER))}
                     >
                     WIP: {d.WIP_JOB_NUMBER} <br/>ID21: {d.ID21_ITEM_NUMBER}<br/>QTY: {d.WIP_JOB_QTY}
                   </ToggleButton>

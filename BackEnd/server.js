@@ -30,9 +30,9 @@ app.get('/search', (req, res) => {
         queryParams.push(`%${query}%`);
       }
   } else if(type === 'tsn'){
-    sqlQuery = 'SELECT DISTINCT WIP_JOB_NUMBER FROM mes_assy_job_info';
+    sqlQuery = 'SELECT DISTINCT mes_assy_job_info.WIP_JOB_NUMBER, mes_wip_info.WIP_JOB_QTY, mes_wip_info.ID21_ITEM_NUMBER FROM mes_assy_job_info INNER JOIN mes_wip_info ON mes_assy_job_info.WIP_JOB_NUMBER=mes_wip_info.WIP_JOB_NUMBER';
     if (query) {
-        conditions.push(' WHERE PRD_SERIAL_NUMBER LIKE ?');
+        conditions.push(' WHERE mes_assy_job_info.PRD_SERIAL_NUMBER LIKE ?');
         queryParams.push(`%${query}%`);
       }
   }
@@ -58,11 +58,11 @@ app.get('/search', (req, res) => {
 
   if (line) {
     if(query){
-      conditions.push(' ASSEMBLY_LINE = ?');
+      conditions.push(' mes_wip_info.ASSEMBLY_LINE = ?');
       queryParams.push(line);  
     }
     else{
-      conditions.push(' WHERE ASSEMBLY_LINE = ?');
+      conditions.push(' WHERE mes_wip_info.ASSEMBLY_LINE = ?');
       queryParams.push(line);
     }
   }
