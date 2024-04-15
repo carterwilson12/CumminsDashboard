@@ -249,7 +249,6 @@ const BOM = (value) =>{
             </div>
           </Grid>
           <Grid item xs={5}>
-          <div style={{height: 40}}></div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 100, minWidth: 200 }} aria-label="spanning table">
                 <TableHead>
@@ -273,7 +272,7 @@ const BOM = (value) =>{
                 </TableBody>
               </Table>
             </TableContainer>
-            <div style={{height: 245}}></div>
+            <div style={{height: 205}}></div>
             <TableContainer component={Paper}>
               <Table sx={{ height: 415, minWidth: 200 }} aria-label="spanning table">
               <TableHead>
