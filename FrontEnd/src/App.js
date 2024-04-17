@@ -2,14 +2,7 @@ import "./App.css";
 import {
   MenuItem,
   Select,
-  List,
-  ListItem,
-  ListItemText,
   TextField,
-  Switch,
-  FormControlLabel,
-  FormGroup,
-  Input,
   InputLabel,
   FormControl,
   Button,
@@ -30,6 +23,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import DownloadIcon from "@mui/icons-material/Download";
+import SearchIcon from "@mui/icons-material/Search";
 
 function App() {
   const [TSNdataID, setTSNdataID] = useState([]);
@@ -252,7 +246,7 @@ function App() {
                 <MenuItem value="30days">30 Days</MenuItem>
               </Select>
             </FormControl>
-            <Button variant="contained" onClick={handleSearch}>
+            <Button variant="contained" onClick={handleSearch} endIcon={<SearchIcon />}>
               Search
             </Button>
             <br />
@@ -344,7 +338,7 @@ function App() {
               </TableBody>
             </Table>
           </TableContainer>
-          <div style={{ height: 205 }}></div>
+          <div style={{ height: 255 }}></div>
           <TableContainer component={Paper}>
             <Table
               sx={{ height: 415, minWidth: 200 }}
